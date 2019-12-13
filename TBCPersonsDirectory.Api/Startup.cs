@@ -29,6 +29,8 @@ namespace TBCPersonsDirectory.Api
             services.AddScoped<IPersonsRepository, PersonsRepository>();
             services.AddScoped<IPersonsService, PersonsService>();
 
+            services.AddOpenApiDocument();
+
             services.AddControllers();
         }
 
@@ -42,6 +44,10 @@ namespace TBCPersonsDirectory.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
+            app.UseReDoc();
 
             app.UseAuthorization();
 
