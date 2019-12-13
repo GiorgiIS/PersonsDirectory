@@ -5,6 +5,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using TBCPersonsDirectory.Repository.EF;
+using TBCPersonsDirectory.Repository.Interfaces;
+using TBCPersonsDirectory.Repository.Implementation;
+using TBCPersonsDirectory.Services.Interfaces;
+using TBCPersonsDirectory.Application;
 
 namespace TBCPersonsDirectory.Api
 {
@@ -17,16 +21,17 @@ namespace TBCPersonsDirectory.Api
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration["ConnectionStrings:Default"];
             services.AddDbContext<PersonsDbContext>(options => options.UseSqlServer(connectionString));
 
+            services.AddScoped<IPersonsRepository, PersonsRepository>();
+            services.AddScoped<IPersonsService, PersonsService>();
+
             services.AddControllers();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())

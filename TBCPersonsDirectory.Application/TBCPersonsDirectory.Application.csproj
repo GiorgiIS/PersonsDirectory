@@ -4,4 +4,9 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TBCPersonsDirectory.Repository\TBCPersonsDirectory.Repository.csproj" />
+    <ProjectReference Include="..\TBCPersonsDirectory.Services\TBCPersonsDirectory.Services.csproj" />
+  </ItemGroup>
+
 </Project>
