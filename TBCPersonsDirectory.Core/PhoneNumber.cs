@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TBCPersonsDirectory.Core
 {
-    public class PhoneNumber
+    public class PhoneNumber : BaseEntity<int>
     {
         public string Number { get; set; }
         public PhoneNumberType? Type { get; set; } 

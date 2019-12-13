@@ -4,9 +4,10 @@ using System.Text;
 
 namespace TBCPersonsDirectory.Core
 {
-    public class ConnectedPersonModel
+    public class ConnectedPersonModel : BaseEntity<int>
     {
-        public int Id { get; set; }
+        public int ConnectedPersonId { get; set; }
+        public Person ConnectedPerson { get; set; }
         public ConnectionType ConnectionType { get; set; }
     }
 
