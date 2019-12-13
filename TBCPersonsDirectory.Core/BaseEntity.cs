@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TBCPersonsDirectory.Core
 {
-    public abstract class BaseEntity<T>
+    public abstract class BaseEntity<K> where K : IComparable
     {
         public BaseEntity()
         {
@@ -12,7 +12,7 @@ namespace TBCPersonsDirectory.Core
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public T Id { get; set; }
+        public K Id { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
