@@ -9,5 +9,6 @@ namespace TBCPersonsDirectory.Services.Interfaces
     public interface IPersonsService
     {
         List<PersonReadDto> GetAll();
+        void Create(PersonCreateDto personCreateDto);
     }
 }

@@ -9,6 +9,8 @@ using TBCPersonsDirectory.Repository.Interfaces;
 using TBCPersonsDirectory.Repository.Implementation;
 using TBCPersonsDirectory.Services.Interfaces;
 using TBCPersonsDirectory.Application;
+using TBCPersonsDirectory.Services;
+using AutoMapper;
 
 namespace TBCPersonsDirectory.Api
 {
@@ -23,6 +25,9 @@ namespace TBCPersonsDirectory.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var assemblies = typeof(AutoMapperProfile).Assembly;
+            services.AddAutoMapper(assemblies);
+
             var connectionString = Configuration["ConnectionStrings:Default"];
             services.AddDbContext<PersonsDbContext>(options => options.UseSqlServer(connectionString));
 

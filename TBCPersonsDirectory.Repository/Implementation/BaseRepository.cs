@@ -22,7 +22,7 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         public IQueryable<T> GetAll()
         {
-            return _context.Set<T>().Where(c => c.DeletedAt != null);
+            return _context.Set<T>().Where(c => c.DeletedAt == null);
         }
 
         public IQueryable<T> Get(Expression<Func<T, bool>> expression)
