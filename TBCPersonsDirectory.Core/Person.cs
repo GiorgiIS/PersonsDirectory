@@ -14,7 +14,6 @@ namespace TBCPersonsDirectory.Core
         public string City { get; set; }
         public string ImageUrl { get; set; }
         public List<PhoneNumber> PhoneNumbers { get; set; } = new List<PhoneNumber>();
-        public List<ConnectedPersonModel> ConnectedPersons { get; set; } = new List<ConnectedPersonModel>();
     }
 
     public enum Gender

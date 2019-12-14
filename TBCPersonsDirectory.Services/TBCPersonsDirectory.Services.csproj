@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TBCPersonsDirectory.Common\TBCPersonsDirectory.Common.csproj" />
     <ProjectReference Include="..\TBCPersonsDirectory.Core\TBCPersonsDirectory.Core.csproj" />
   </ItemGroup>
 

@@ -11,6 +11,8 @@ using TBCPersonsDirectory.Services.Interfaces;
 using TBCPersonsDirectory.Application;
 using TBCPersonsDirectory.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 
 namespace TBCPersonsDirectory.Api
 {
@@ -36,7 +38,28 @@ namespace TBCPersonsDirectory.Api
 
             services.AddOpenApiDocument();
 
-            services.AddControllers();
+            services.AddControllers()
+                .ConfigureApiBehaviorOptions(setupAction =>
+                {
+                    setupAction.InvalidModelStateResponseFactory = context =>
+                    {
+                        var problemDetails = new ValidationProblemDetails(context.ModelState)
+                        {
+                            Type = "ModelValidationProblem",
+                            Title = "One or more model validation errors occured",
+                            Status = StatusCodes.Status422UnprocessableEntity,
+                            Detail = "See the error property for details",
+                            Instance = context.HttpContext.Request.Path
+                        };
+
+                        problemDetails.Extensions.Add("traceId", context.HttpContext.TraceIdentifier);
+
+                        return new UnprocessableEntityObjectResult(problemDetails)
+                        {
+                            ContentTypes = { "application/problem+json" }
+                        };
+                    };
+                });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
