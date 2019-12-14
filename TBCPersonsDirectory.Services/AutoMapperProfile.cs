@@ -12,7 +12,8 @@ namespace TBCPersonsDirectory.Services
         public AutoMapperProfile()
         {
             CreateMap<PersonCreateDto, Person>();
-            CreateMap<Person, PersonReadDto>();
+
+            CreateMap<Person, PersonReadDto>().ForMember(c => c.City, d => d.MapFrom(x => x.City.Name));
         }
     }
 }

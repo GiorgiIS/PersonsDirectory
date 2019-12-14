@@ -10,8 +10,8 @@ using TBCPersonsDirectory.Repository.EF;
 namespace TBCPersonsDirectory.Repository.EF.Migrations
 {
     [DbContext(typeof(PersonsDbContext))]
-    [Migration("20191213200233_Initial")]
-    partial class Initial
+    [Migration("20191214104347_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,18 +21,12 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("TBCPersonsDirectory.Core.ConnectedPersonModel", b =>
+            modelBuilder.Entity("TBCPersonsDirectory.Core.City", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("ConnectedPersonId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ConnectionType")
-                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -40,14 +34,45 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ConnectedPersonId");
+                    b.ToTable("Citys");
 
-                    b.ToTable("ConnectedPersonModel");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2019, 12, 14, 10, 43, 47, 195, DateTimeKind.Utc).AddTicks(3977),
+                            Name = "Tbilisi",
+                            UpdatedAt = new DateTime(2019, 12, 14, 10, 43, 47, 195, DateTimeKind.Utc).AddTicks(4900)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CreatedAt = new DateTime(2019, 12, 14, 10, 43, 47, 195, DateTimeKind.Utc).AddTicks(6753),
+                            Name = "Batumi",
+                            UpdatedAt = new DateTime(2019, 12, 14, 10, 43, 47, 195, DateTimeKind.Utc).AddTicks(6765)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            CreatedAt = new DateTime(2019, 12, 14, 10, 43, 47, 195, DateTimeKind.Utc).AddTicks(6833),
+                            Name = "Kutaisi",
+                            UpdatedAt = new DateTime(2019, 12, 14, 10, 43, 47, 195, DateTimeKind.Utc).AddTicks(6834)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            CreatedAt = new DateTime(2019, 12, 14, 10, 43, 47, 195, DateTimeKind.Utc).AddTicks(6836),
+                            Name = "Foti",
+                            UpdatedAt = new DateTime(2019, 12, 14, 10, 43, 47, 195, DateTimeKind.Utc).AddTicks(6837)
+                        });
                 });
 
             modelBuilder.Entity("TBCPersonsDirectory.Core.Person", b =>
@@ -60,8 +85,8 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                     b.Property<DateTime?>("BirthDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("CityId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -89,55 +114,16 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CityId");
+
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("TBCPersonsDirectory.Core.PhoneNumber", b =>
+            modelBuilder.Entity("TBCPersonsDirectory.Core.Person", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime?>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Number")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Type")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
-
-                    b.ToTable("PhoneNumber");
-                });
-
-            modelBuilder.Entity("TBCPersonsDirectory.Core.ConnectedPersonModel", b =>
-                {
-                    b.HasOne("TBCPersonsDirectory.Core.Person", "ConnectedPerson")
-                        .WithMany("ConnectedPersons")
-                        .HasForeignKey("ConnectedPersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("TBCPersonsDirectory.Core.PhoneNumber", b =>
-                {
-                    b.HasOne("TBCPersonsDirectory.Core.Person", null)
-                        .WithMany("PhoneNumbers")
-                        .HasForeignKey("PersonId");
+                    b.HasOne("TBCPersonsDirectory.Core.City", "City")
+                        .WithMany()
+                        .HasForeignKey("CityId");
                 });
 #pragma warning restore 612, 618
         }

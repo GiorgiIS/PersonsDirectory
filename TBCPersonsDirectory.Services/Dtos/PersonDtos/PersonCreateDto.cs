@@ -36,11 +36,6 @@ namespace TBCPersonsDirectory.Services.Dtos.PersonDtos
         [Required]
         public string ImageUrl { get; set; }
 
-        //[Range(0, 2)]
-        //public int? PhoneNumberType { get; set; }
-
-        //[MinLength(4)]
-        //[MaxLength(50)]
-        //public string PhoneNumber { get; set; }
+        public int? CityId { get; set; }
     }
 }

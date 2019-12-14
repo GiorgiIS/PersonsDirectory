@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace TBCPersonsDirectory.Core
 {
@@ -11,9 +9,9 @@ namespace TBCPersonsDirectory.Core
         public Gender? Gender { get; set; }
         public string PrivateNumber { get; set; }
         public DateTime? BirthDate { get; set; }
-        public string City { get; set; }
+        public int? CityId { get; set; }
+        public City City { get; set; }
         public string ImageUrl { get; set; }
-        public List<PhoneNumber> PhoneNumbers { get; set; } = new List<PhoneNumber>();
     }
 
     public enum Gender

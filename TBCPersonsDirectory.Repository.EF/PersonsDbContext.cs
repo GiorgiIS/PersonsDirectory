@@ -14,6 +14,7 @@ namespace TBCPersonsDirectory.Repository.EF
         }
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<City> Citys { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -22,8 +23,15 @@ namespace TBCPersonsDirectory.Repository.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<City>().HasData(
+                new List<City> {
+                    new City(1, "Tbilisi"),
+                    new City(2, "Batumi"),
+                    new City(3, "Kutaisi"),
+                    new City(4, "Foti"),
+                });
 
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

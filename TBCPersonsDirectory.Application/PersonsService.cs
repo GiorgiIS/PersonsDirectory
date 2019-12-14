@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,7 @@ namespace TBCPersonsDirectory.Application
 
         public List<PersonReadDto> GetAll()
         {
-            var personDtos = _mapper.Map<List<PersonReadDto>>(_personsRepository.GetAll());
+            var personDtos = _mapper.Map<List<PersonReadDto>>(_personsRepository.GetAll().Include(c => c.City));
             return personDtos;
         }
     }
