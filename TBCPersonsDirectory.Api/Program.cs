@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TBCPersonsDirectory.Repository.EF;
 
 namespace TBCPersonsDirectory.Api
 {
@@ -13,14 +14,18 @@ namespace TBCPersonsDirectory.Api
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args)
+                .Build()
+                .MigrateDatabase()
+                .Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .UseUrls("https://localhost:2727");
                 });
     }
 }

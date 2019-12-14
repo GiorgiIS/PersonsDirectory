@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using TBCPersonsDirectory.Core;
+using TBCPersonsDirectory.Repository.EF.Migrations;
 
 namespace TBCPersonsDirectory.Repository.EF
 {
@@ -24,19 +26,19 @@ namespace TBCPersonsDirectory.Repository.EF
         {
             modelBuilder.Entity<City>().HasData(
                 new List<City> {
-                    new City(1, "Tbilisi"),
-                    new City(2, "Batumi"),
-                    new City(3, "Kutaisi"),
-                    new City(4, "Foti"),
+                        new City(1, "Tbilisi"),
+                        new City(2, "Batumi"),
+                        new City(3, "Kutaisi"),
+                        new City(4, "Foti"),
                 });
 
             modelBuilder.Entity<ConnectionType>().HasData(
-                new List<ConnectionType> {
+                  new List<ConnectionType> {
                     new ConnectionType(1, "College"),
                     new ConnectionType(2, "Familiar"),
                     new ConnectionType(3, "Relative"),
                     new ConnectionType(4, "Other"),
-                });
+                  });
 
             modelBuilder.Entity<PhoneNumberType>().HasData(
                new List<PhoneNumberType> {
