@@ -4,11 +4,10 @@ using System.Text;
 
 namespace TBCPersonsDirectory.Core
 {
-    public class City
+    public class PhoneNumberType
     {
-        public City() { }
-
-        public City(int id, string name) : base()
+        public PhoneNumberType() { }
+        public PhoneNumberType(int id, string name)
         {
             Id = id;
             Name = name;

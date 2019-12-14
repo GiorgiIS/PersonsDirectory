@@ -4,11 +4,9 @@ using System.Text;
 
 namespace TBCPersonsDirectory.Core
 {
-    public class City
+    public class ConnectionType
     {
-        public City() { }
-
-        public City(int id, string name) : base()
+        public ConnectionType(int id, string name)
         {
             Id = id;
             Name = name;

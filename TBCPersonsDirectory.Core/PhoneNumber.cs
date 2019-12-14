@@ -4,16 +4,22 @@ using System.Text;
 
 namespace TBCPersonsDirectory.Core
 {
-    public class PhoneNumber : BaseEntity<int>
+    public class PersonPhoneNumber : BaseEntity<int>
     {
-        public string Number { get; set; }
-        public PhoneNumberType? Type { get; set; } 
-    }
+        public PersonPhoneNumber() { }
+        public PersonPhoneNumber(int id, int personId, string number, int phoneNumberTypeId)
+        {
+            Number = number;
+            PhoneNumberTypeId = phoneNumberTypeId;
+            PersonId = PersonId;
+            Id = id;
+        }
 
-    public enum PhoneNumberType
-    {
-        Office,
-        Mobile,
-        Home
+        public int? PersonId { get; set; }
+        public Person Person { get; set; }
+        public string Number { get; set; }
+
+        public int? PhoneNumberTypeId { get; set; }
+        public PhoneNumberType PhoneNumberType { get; set; } 
     }
 }

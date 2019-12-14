@@ -4,11 +4,10 @@ using System.Text;
 
 namespace TBCPersonsDirectory.Core
 {
-    public class City
+    public class Gender
     {
-        public City() { }
-
-        public City(int id, string name) : base()
+        public Gender() { }
+        public Gender(int id, string name)
         {
             Id = id;
             Name = name;
