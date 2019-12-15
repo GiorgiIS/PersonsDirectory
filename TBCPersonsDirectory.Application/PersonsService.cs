@@ -8,6 +8,7 @@ using TBCPersonsDirectory.Common;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Repository.Interfaces;
 using TBCPersonsDirectory.Services;
+using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
 using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 using TBCPersonsDirectory.Services.Interfaces;
@@ -17,12 +18,22 @@ namespace TBCPersonsDirectory.Application
     public class PersonsService : IPersonsService
     {
         private readonly IPersonsRepository _personsRepository;
+        private readonly IPersonConnectionsRepository _personConnectionsRepository;
         private readonly IMapper _mapper;
 
-        public PersonsService(IPersonsRepository personsRepository, IMapper mapper)
+        public PersonsService(IPersonsRepository personsRepository, IPersonConnectionsRepository personConnectionsRepository, IMapper mapper)
         {
             _personsRepository = personsRepository;
+            _personConnectionsRepository = personConnectionsRepository;
             _mapper = mapper;
+        }
+
+        public void AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto)
+        {
+            var person = _personsRepository.GetById(personId).Single();
+            var phone = _mapper.Map<PersonPhoneNumber>(phoneNumberCreateDto);
+            person.PhoneNumbers.Add(phone);
+            _personsRepository.SaveChanges();
         }
 
         public void Create(PersonCreateDto personCreateDto)
@@ -31,6 +42,15 @@ namespace TBCPersonsDirectory.Application
 
             _personsRepository.Create(person);
             _personsRepository.SaveChanges();
+        }
+
+        public void CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto)
+        {
+            var connection = _mapper.Map<PersonConnection>(personConnectionsCreateDto);
+            connection.FirstPersonId = sourcePersonId;
+
+            _personConnectionsRepository.Create(connection);
+            _personConnectionsRepository.SaveChanges();
         }
 
         public void Delete(int id)
@@ -76,16 +96,57 @@ namespace TBCPersonsDirectory.Application
         public PersonReadDto GetById(int id)
         {
             if (!_personsRepository.Exists(id))
-                return PersonReadDto.Null();
+                return null;
 
             var person = _personsRepository.GetById(id)
                 .Include(c => c.Gender)
                 .Include(c => c.City)
+                .Include(c => c.PhoneNumbers)
+                .Include("PhoneNumbers.PhoneNumberType")
                 .Single();
 
+            person.PhoneNumbers = person.PhoneNumbers.Where(c => c.DeletedAt == null).ToList();
+
+            var connectedPersons = _personConnectionsRepository.GetByPersonId(id).Include(c => c.SecondPerson);
+            var notRemoved= connectedPersons.Where(c => c.SecondPerson.DeletedAt == null && c.DeletedAt == null);
+
+            var connectedPersonsReadDtos = _mapper.Map<List<PersonConnectionsReadDto>>(notRemoved);
+
             var personDto = _mapper.Map<PersonReadDto>(person);
+            personDto.ConnectedPersons.AddRange(connectedPersonsReadDtos);
 
             return personDto;
+        }
+
+        public bool PersonConnectionTypeIsValid(int connectionTypeId)
+        {
+            return _personConnectionsRepository.GetConnection(connectionTypeId) != null;
+        }
+
+        public bool PersonHasConnection(int sourcePersonId, int targetPersonId)
+        {
+            return _personConnectionsRepository.GetConnection(sourcePersonId, targetPersonId) != null;
+        }
+
+        public bool PersonHasPhone(int personId, int phoneId)
+        {
+            var phone = GetPersonsPhone(personId, phoneId);
+            return phone != null;
+        }
+
+        public void RemovePersonConnection(int sourcePersonId, int targetPersonId)
+        {
+           _personConnectionsRepository.RemovePersonsConnection(sourcePersonId, targetPersonId);
+            _personConnectionsRepository.SaveChanges();
+        }
+
+        public void RemovePersonsPhone(int personId, int phoneId)
+        {
+            var phone = GetPersonsPhone(personId, phoneId);
+            phone.DeletedAt = DateTime.UtcNow;
+            phone.UpdatedAt = DateTime.UtcNow;
+
+            _personsRepository.SaveChanges();
         }
 
         public void Update(int id, PersonUpdateDto personUpdateDto)
@@ -95,6 +156,31 @@ namespace TBCPersonsDirectory.Application
 
             _personsRepository.Update(updated);
             _personsRepository.SaveChanges();
+        }
+
+        public void UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId)
+        {
+            _personConnectionsRepository.UpdatePersonConnection(sourcePersonId, targetPersonId, connectionTypeId);
+            _personConnectionsRepository.SaveChanges();
+        }
+
+        public void UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto)
+        {
+            var phone = GetPersonsPhone(personId, phoneId);
+            phone.Number = phoneNumberUpdateDto.Number;
+            phone.PhoneNumberTypeId = phoneNumberUpdateDto.PhoneNumberTypeId;
+            phone.UpdatedAt = DateTime.UtcNow;
+
+            _personsRepository.SaveChanges();
+        }
+
+        private PersonPhoneNumber GetPersonsPhone(int personId, int phoneId)
+        {
+            var person = _personsRepository.GetById(personId)
+                .Include(c => c.PhoneNumbers).First();
+
+            var phone = person.PhoneNumbers.FirstOrDefault(c => c.Id == phoneId && c.DeletedAt == null);
+            return phone;
         }
     }
 }

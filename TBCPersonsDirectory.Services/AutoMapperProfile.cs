@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using TBCPersonsDirectory.Core;
+using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
 using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 
@@ -30,6 +28,14 @@ namespace TBCPersonsDirectory.Services
 
             CreateMap<PhoneNumberCreateDto, PersonPhoneNumber>();
             CreateMap<PhoneNumberUpdateDto, PersonPhoneNumber>();
+
+            CreateMap<PersonConnection, PersonConnectionsReadDto>()
+                 .ForMember(c => c.Person, d => d.MapFrom(x => x.SecondPerson));
+
+            CreateMap<PersonConnectionsCreateDto, PersonConnection>()
+                  .ForMember(c => c.ConnectionTypeId, d => d.MapFrom(x => x.ConnectionTypeId))
+                  .ForMember(c => c.SecondPersonId, d => d.MapFrom(x => x.TargetPersonId));
+            ;
         }
     }
 }

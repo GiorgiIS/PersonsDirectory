@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using TBCPersonsDirectory.Services.Dtos.CustomValidationAttributes;
+using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 
 namespace TBCPersonsDirectory.Services.Dtos.PersonDtos
 {
@@ -33,5 +35,7 @@ namespace TBCPersonsDirectory.Services.Dtos.PersonDtos
         public string ImageUrl { get; set; }
 
         public int? CityId { get; set; }
+
+        public List<PhoneNumberCreateDto> PhoneNumbers { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace TBCPersonsDirectory.Repository.EF
         public DbSet<City> Citys { get; set; }
         public DbSet<PersonConnection> PersonConnections { get; set; }
         public DbSet<PhoneNumberType> PhoneNumberTypes { get; set; }
+        public DbSet<ConnectionType> ConnectionType { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

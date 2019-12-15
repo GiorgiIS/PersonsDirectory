@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
+using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 
 namespace TBCPersonsDirectory.Services.Dtos.PersonDtos
 {
@@ -15,14 +17,7 @@ namespace TBCPersonsDirectory.Services.Dtos.PersonDtos
         public string ImageUrl { get; set; }
         public string Gender { get; set; }
 
-        public static PersonReadDto Null()
-        {
-            return new PersonReadDto();
-        }
-
-        public bool IsNull()
-        {
-            return Id == null || Id <= 0;
-        }
+        public List<PersonConnectionsReadDto> ConnectedPersons { get; set; } = new List<PersonConnectionsReadDto>();
+        public List<PhoneNumberReadDto> PhoneNumbers { get; set; } = new List<PhoneNumberReadDto>();
     }
 }

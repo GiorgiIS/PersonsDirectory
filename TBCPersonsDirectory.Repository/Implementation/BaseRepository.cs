@@ -14,7 +14,7 @@ namespace TBCPersonsDirectory.Repository.Implementation
         where K : IComparable
         where T : BaseEntity<K>
     {
-        private readonly PersonsDbContext _context;
+        protected readonly PersonsDbContext _context;
         public BaseRepository(PersonsDbContext context)
         {
             _context = context;
