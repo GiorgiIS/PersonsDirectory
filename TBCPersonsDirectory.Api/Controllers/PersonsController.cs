@@ -14,12 +14,10 @@ namespace TBCPersonsDirectory.Api.Controllers
     public class PersonsController : Controller
     {
         private readonly IPersonsService _personsService;
-        private readonly IMapper _mapper;
 
-        public PersonsController(IPersonsService personsService, IMapper mapper)
+        public PersonsController(IPersonsService personsService)
         {
             _personsService = personsService;
-            _mapper = mapper;
         }
 
         [HttpGet]
