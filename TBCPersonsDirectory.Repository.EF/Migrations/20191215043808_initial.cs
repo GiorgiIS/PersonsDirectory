@@ -203,27 +203,37 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
             migrationBuilder.InsertData(
                 table: "Persons",
                 columns: new[] { "Id", "BirthDate", "CityId", "CreatedAt", "DeletedAt", "FirstName", "GenderId", "ImageUrl", "LastName", "PrivateNumber", "UpdatedAt" },
-                values: new object[] { 1, new DateTime(1994, 12, 20, 21, 17, 6, 126, DateTimeKind.Local).AddTicks(4443), 1, new DateTime(2019, 12, 20, 17, 17, 6, 126, DateTimeKind.Utc).AddTicks(541), null, "Kaka", 1, "NO_IMAGE", "Kuku", "12345678911", new DateTime(2019, 12, 20, 17, 17, 6, 126, DateTimeKind.Utc).AddTicks(2318) });
-
-            migrationBuilder.InsertData(
-                table: "Persons",
-                columns: new[] { "Id", "BirthDate", "CityId", "CreatedAt", "DeletedAt", "FirstName", "GenderId", "ImageUrl", "LastName", "PrivateNumber", "UpdatedAt" },
-                values: new object[] { 2, new DateTime(1994, 12, 20, 21, 17, 6, 127, DateTimeKind.Local).AddTicks(7653), 1, new DateTime(2019, 12, 20, 17, 17, 6, 127, DateTimeKind.Utc).AddTicks(7617), null, "Paolo", 1, "NO_IMAGE", "Maldini", "06345678911", new DateTime(2019, 12, 20, 17, 17, 6, 127, DateTimeKind.Utc).AddTicks(7631) });
+                values: new object[,]
+                {
+                    { 1, new DateTime(1994, 12, 15, 8, 38, 8, 423, DateTimeKind.Local).AddTicks(6699), 1, new DateTime(2019, 12, 15, 4, 38, 8, 423, DateTimeKind.Utc).AddTicks(4620), null, "Kaka", 1, "NO_IMAGE", "Kuku", "12345678911", new DateTime(2019, 12, 15, 4, 38, 8, 423, DateTimeKind.Utc).AddTicks(5279) },
+                    { 2, new DateTime(1994, 12, 15, 8, 38, 8, 424, DateTimeKind.Local).AddTicks(7466), 1, new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7432), null, "Paolo", 1, "NO_IMAGE", "Maldini", "06345678911", new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7443) },
+                    { 3, new DateTime(1991, 12, 15, 8, 38, 8, 424, DateTimeKind.Local).AddTicks(7533), 1, new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7531), null, "არაგორნ", 1, "NO_IMAGE", "ელენდიელი", "01457876911", new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7532) },
+                    { 4, new DateTime(1993, 12, 15, 8, 38, 8, 424, DateTimeKind.Local).AddTicks(7539), 1, new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7537), null, "ვიქტორ", 1, "NO_IMAGE", "ჰიუგო", "11566378911", new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7538) },
+                    { 5, new DateTime(1996, 12, 15, 8, 38, 8, 424, DateTimeKind.Local).AddTicks(7543), 1, new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7541), null, "ვარდან", 1, "NO_IMAGE", "მამეკონიანი", "12366278911", new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7542) }
+                });
 
             migrationBuilder.InsertData(
                 table: "PersonConnections",
                 columns: new[] { "Id", "ConnectionTypeId", "CreatedAt", "DeletedAt", "FirstPersonId", "SecondPersonId", "UpdatedAt" },
-                values: new object[] { 1, 1, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(3515), null, 1, 2, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(3520) });
+                values: new object[,]
+                {
+                    { 1, 1, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(1417), null, 1, 2, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(1421) },
+                    { 4, 2, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2749), null, 2, 1, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2749) },
+                    { 2, 1, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2719), null, 1, 3, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2722) },
+                    { 5, 1, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2751), null, 2, 3, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2751) },
+                    { 6, 1, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2755), null, 3, 1, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2756) },
+                    { 3, 2, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2746), null, 1, 4, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2747) }
+                });
 
             migrationBuilder.InsertData(
                 table: "PersonPhoneNumber",
                 columns: new[] { "Id", "CreatedAt", "DeletedAt", "Number", "PersonId", "PhoneNumberTypeId", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(5), null, "111111111", 1, 1, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(9) },
-                    { 2, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1964), null, "222222222", 1, 2, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1968) },
-                    { 3, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1994), null, "333333333", 2, 2, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1995) },
-                    { 4, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1997), null, "55555555", 2, 1, new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1998) }
+                    { 1, new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(8793), null, "111111111", 1, 1, new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(8798) },
+                    { 2, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(96), null, "222222222", 1, 2, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(100) },
+                    { 3, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(123), null, "333333333", 2, 2, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(124) },
+                    { 4, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(125), null, "55555555", 2, 1, new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(126) }
                 });
 
             migrationBuilder.CreateIndex(

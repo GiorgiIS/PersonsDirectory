@@ -10,7 +10,7 @@ using TBCPersonsDirectory.Repository.EF;
 namespace TBCPersonsDirectory.Repository.EF.Migrations
 {
     [DbContext(typeof(PersonsDbContext))]
-    [Migration("20191220171706_initial")]
+    [Migration("20191215043808_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,28 +171,67 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDate = new DateTime(1994, 12, 20, 21, 17, 6, 126, DateTimeKind.Local).AddTicks(4443),
+                            BirthDate = new DateTime(1994, 12, 15, 8, 38, 8, 423, DateTimeKind.Local).AddTicks(6699),
                             CityId = 1,
-                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 126, DateTimeKind.Utc).AddTicks(541),
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 423, DateTimeKind.Utc).AddTicks(4620),
                             FirstName = "Kaka",
                             GenderId = 1,
                             ImageUrl = "NO_IMAGE",
                             LastName = "Kuku",
                             PrivateNumber = "12345678911",
-                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 126, DateTimeKind.Utc).AddTicks(2318)
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 423, DateTimeKind.Utc).AddTicks(5279)
                         },
                         new
                         {
                             Id = 2,
-                            BirthDate = new DateTime(1994, 12, 20, 21, 17, 6, 127, DateTimeKind.Local).AddTicks(7653),
+                            BirthDate = new DateTime(1994, 12, 15, 8, 38, 8, 424, DateTimeKind.Local).AddTicks(7466),
                             CityId = 1,
-                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 127, DateTimeKind.Utc).AddTicks(7617),
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7432),
                             FirstName = "Paolo",
                             GenderId = 1,
                             ImageUrl = "NO_IMAGE",
                             LastName = "Maldini",
                             PrivateNumber = "06345678911",
-                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 127, DateTimeKind.Utc).AddTicks(7631)
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7443)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            BirthDate = new DateTime(1991, 12, 15, 8, 38, 8, 424, DateTimeKind.Local).AddTicks(7533),
+                            CityId = 1,
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7531),
+                            FirstName = "არაგორნ",
+                            GenderId = 1,
+                            ImageUrl = "NO_IMAGE",
+                            LastName = "ელენდიელი",
+                            PrivateNumber = "01457876911",
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7532)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            BirthDate = new DateTime(1993, 12, 15, 8, 38, 8, 424, DateTimeKind.Local).AddTicks(7539),
+                            CityId = 1,
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7537),
+                            FirstName = "ვიქტორ",
+                            GenderId = 1,
+                            ImageUrl = "NO_IMAGE",
+                            LastName = "ჰიუგო",
+                            PrivateNumber = "11566378911",
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7538)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            BirthDate = new DateTime(1996, 12, 15, 8, 38, 8, 424, DateTimeKind.Local).AddTicks(7543),
+                            CityId = 1,
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7541),
+                            FirstName = "ვარდან",
+                            GenderId = 1,
+                            ImageUrl = "NO_IMAGE",
+                            LastName = "მამეკონიანი",
+                            PrivateNumber = "12366278911",
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(7542)
                         });
                 });
 
@@ -236,10 +275,55 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                         {
                             Id = 1,
                             ConnectionTypeId = 1,
-                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(3515),
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(1417),
                             FirstPersonId = 1,
                             SecondPersonId = 2,
-                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(3520)
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(1421)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            ConnectionTypeId = 1,
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2719),
+                            FirstPersonId = 1,
+                            SecondPersonId = 3,
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2722)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ConnectionTypeId = 2,
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2746),
+                            FirstPersonId = 1,
+                            SecondPersonId = 4,
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2747)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ConnectionTypeId = 2,
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2749),
+                            FirstPersonId = 2,
+                            SecondPersonId = 1,
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2749)
+                        },
+                        new
+                        {
+                            Id = 5,
+                            ConnectionTypeId = 1,
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2751),
+                            FirstPersonId = 2,
+                            SecondPersonId = 3,
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2751)
+                        },
+                        new
+                        {
+                            Id = 6,
+                            ConnectionTypeId = 1,
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2755),
+                            FirstPersonId = 3,
+                            SecondPersonId = 1,
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(2756)
                         });
                 });
 
@@ -284,38 +368,38 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(5),
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(8793),
                             Number = "111111111",
                             PersonId = 1,
                             PhoneNumberTypeId = 1,
-                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(9)
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 424, DateTimeKind.Utc).AddTicks(8798)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1964),
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(96),
                             Number = "222222222",
                             PersonId = 1,
                             PhoneNumberTypeId = 2,
-                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1968)
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(100)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1994),
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(123),
                             Number = "333333333",
                             PersonId = 2,
                             PhoneNumberTypeId = 2,
-                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1995)
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(124)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1997),
+                            CreatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(125),
                             Number = "55555555",
                             PersonId = 2,
                             PhoneNumberTypeId = 1,
-                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1998)
+                            UpdatedAt = new DateTime(2019, 12, 15, 4, 38, 8, 425, DateTimeKind.Utc).AddTicks(126)
                         });
                 });
 

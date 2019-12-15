@@ -74,6 +74,36 @@ namespace TBCPersonsDirectory.Repository.EF
                      ImageUrl = "NO_IMAGE",
                      GenderId = 1,
                      PrivateNumber = "06345678911"
+                 },
+                    new Person(){
+                     Id = 3,
+                     CityId = 1,
+                     BirthDate = DateTime.Now.AddYears(-28),
+                     FirstName = "არაგორნ",
+                     LastName = "ელენდიელი",
+                     ImageUrl = "NO_IMAGE",
+                     GenderId = 1,
+                     PrivateNumber = "01457876911"
+                 },
+                     new Person(){
+                     Id = 4,
+                     CityId = 1,
+                     BirthDate = DateTime.Now.AddYears(-26),
+                     FirstName = "ვიქტორ",
+                     LastName = "ჰიუგო",
+                     ImageUrl = "NO_IMAGE",
+                     GenderId = 1,
+                     PrivateNumber = "11566378911"
+                 },
+                      new Person(){
+                     Id = 5,
+                     CityId = 1,
+                     BirthDate = DateTime.Now.AddYears(-23),
+                     FirstName = "ვარდან",
+                     LastName = "მამეკონიანი",
+                     ImageUrl = "NO_IMAGE",
+                     GenderId = 1,
+                     PrivateNumber = "12366278911"
                  }
                 });
 
@@ -88,7 +118,12 @@ namespace TBCPersonsDirectory.Repository.EF
             modelBuilder.Entity<PersonConnection>().HasData(
                 new List<PersonConnection>
                 {
-                    new PersonConnection(1,1,2,1)
+                    new PersonConnection(1,1,2,1),
+                     new PersonConnection(2,1,3,1),
+                     new PersonConnection(3,1,4,2),
+                     new PersonConnection(4,2,1,2),
+                     new PersonConnection(5,2,3,1),
+                     new PersonConnection(6,3,1,1)
                 });
 
             base.OnModelCreating(modelBuilder);
