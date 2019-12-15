@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TBCPersonsDirectory.Common;
 
-namespace TBCPersonsDirectory.Services
+namespace TBCPersonsDirectory.Services.Models
 {
     public class PersonSearchModel : BaseSearchModel<int>
     {

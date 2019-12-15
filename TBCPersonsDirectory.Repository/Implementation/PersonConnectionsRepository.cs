@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Repository.EF;
@@ -19,7 +20,7 @@ namespace TBCPersonsDirectory.Repository.Implementation
             return persons;
         }
 
-        public ConnectionType GetConnection(int connectionTypeId)
+        public ConnectionType GetConnectionType(int connectionTypeId)
         {
             var connection = _context.ConnectionType.Find(connectionTypeId);
             return connection;
@@ -47,6 +48,11 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
             connection.ConnectionTypeId= connectionTypeId;
             connection.UpdatedAt = DateTime.UtcNow;
+        }
+
+        public List<ConnectionType> GetConnectionTypes()
+        {
+            return _context.ConnectionType.ToList();
         }
     }
 }

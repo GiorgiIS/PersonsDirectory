@@ -6,6 +6,7 @@ using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
 using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 using TBCPersonsDirectory.Services.Interfaces;
+using TBCPersonsDirectory.Services.Models;
 
 namespace TBCPersonsDirectory.Api.Controllers
 {

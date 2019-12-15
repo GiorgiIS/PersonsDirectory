@@ -3,15 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using TBCPersonsDirectory.Common;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Repository.Interfaces;
-using TBCPersonsDirectory.Services;
 using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
 using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 using TBCPersonsDirectory.Services.Interfaces;
+using TBCPersonsDirectory.Services.Models;
 
 namespace TBCPersonsDirectory.Application
 {
@@ -120,7 +118,7 @@ namespace TBCPersonsDirectory.Application
 
         public bool PersonConnectionTypeIsValid(int connectionTypeId)
         {
-            return _personConnectionsRepository.GetConnection(connectionTypeId) != null;
+            return _personConnectionsRepository.GetConnectionType(connectionTypeId) != null;
         }
 
         public bool PersonHasConnection(int sourcePersonId, int targetPersonId)

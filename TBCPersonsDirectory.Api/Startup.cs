@@ -37,9 +37,9 @@ namespace TBCPersonsDirectory.Api
             services.AddScoped<IPersonsService, PersonsService>();
 
             services.AddScoped<IPersonPhoneNumberRepository, PersonPhoneNumberRepository>();
-            services.AddScoped<IPersonPhoneNumberService, PersonPhoneNumberService>();
-
+            
             services.AddScoped<IPersonConnectionsRepository, PersonConnectionsRepository>();
+            services.AddScoped<IReportService, ReportService>();
 
             services.AddOpenApiDocument();
 
