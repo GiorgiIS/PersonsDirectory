@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using TBCPersonsDirectory.Core;
+using TBCPersonsDirectory.Services;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
 using TBCPersonsDirectory.Services.Interfaces;
 
@@ -24,9 +25,9 @@ namespace TBCPersonsDirectory.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery]PersonSearchModel model)
         {
-            return Ok(_personsService.GetAll());
+            return Ok(_personsService.GetAll(model));
         }
 
         [HttpPost]

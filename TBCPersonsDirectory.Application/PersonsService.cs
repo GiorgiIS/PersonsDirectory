@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TBCPersonsDirectory.Common;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Repository.Interfaces;
+using TBCPersonsDirectory.Services;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
 using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 using TBCPersonsDirectory.Services.Interfaces;
@@ -42,9 +44,28 @@ namespace TBCPersonsDirectory.Application
             return _personsRepository.Exists(id);
         }
 
-        public List<PersonReadDto> GetAll()
+        public List<PersonReadDto> GetAll(PersonSearchModel model)
         {
             var persons = _personsRepository.GetAll()
+                .Include(c => c.PhoneNumbers)
+                .Where(c =>
+                    (model.Id == 0 ? true : c.Id == model.Id)
+                    && (string.IsNullOrEmpty(model.PrivateNumber) ? true : c.PrivateNumber.Contains(model.PrivateNumber))
+                    && (model.CityId == null ? true : c.CityId == model.CityId)
+                    && (model.GenderId == null ? true : c.GenderId == model.GenderId)
+                    && (string.IsNullOrEmpty(model.FirstName) ? true : c.FirstName.Contains(model.FirstName))
+                    && (string.IsNullOrEmpty(model.LastName) ? true : c.LastName.Contains(model.LastName))
+                    && (string.IsNullOrEmpty(model.PhoneNumber) ? true : c.PhoneNumbers.Any(x => x.Number.Contains(model.PhoneNumber))
+                    && (string.IsNullOrEmpty(model.LastName) ? true : c.LastName.Contains(model.LastName)))
+                    && (model.BirthDateFrom == null ? true : c.BirthDate == null ? false : model.BirthDateFrom < c.BirthDate)
+                    && (model.BirthDateTo == null ? true : c.BirthDate == null ? false : model.BirthDateTo > c.BirthDate)
+                    && (model.CreatedFrom == null ? true : model.CreatedFrom < c.CreatedAt)
+                    && (model.CreatedTo == null ? true : model.CreatedTo > c.CreatedAt)
+                    && (model.UpdatedFrom == null ? true : model.UpdatedFrom < c.UpdatedAt)
+                    && (model.UpdatedTo == null ? true : model.UpdatedTo > c.CreatedAt)
+                )
+                .Skip((model.Pagination.TargetPage - 1) * model.Pagination.CountPerPage)
+                .Take(model.Pagination.CountPerPage)
                 .Include(c => c.City)
                 .Include(c => c.Gender);
 
@@ -71,7 +92,7 @@ namespace TBCPersonsDirectory.Application
         {
             var updated = _mapper.Map<Person>(personUpdateDto);
             updated.Id = id;
-           
+
             _personsRepository.Update(updated);
             _personsRepository.SaveChanges();
         }
