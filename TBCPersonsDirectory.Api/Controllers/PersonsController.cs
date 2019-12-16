@@ -42,7 +42,8 @@ namespace TBCPersonsDirectory.Api.Controllers
 
             if (serviceResponse.IsSuccess)
             {
-                return Ok();
+                // todo: Created status should be here
+                return Ok(); 
             }
 
             return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
@@ -107,6 +108,7 @@ namespace TBCPersonsDirectory.Api.Controllers
 
             if (serviceResponse.IsSuccess)
             {
+                // todo: Created status should be here
                 return Ok();
             }
 
