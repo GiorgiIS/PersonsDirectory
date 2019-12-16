@@ -54,10 +54,20 @@ namespace TBCPersonsDirectory.Common
     {
         public ErrorStatusCodes Code { get; set; }
         public string Description { get; set; }
+
+        public ServiceErrorMessage NotFound(string subject) => new ServiceErrorMessage { Code = ErrorStatusCodes.NOT_FOUND, Description = $"{subject} Was not found" };
+
+        public ServiceErrorMessage InvalidValue(string subject) => new ServiceErrorMessage { Code = ErrorStatusCodes.INVALID_VALUE, Description = $"{subject} Was Invalid" };
+
+        public ServiceErrorMessage AlreadyExists(string subject) => new ServiceErrorMessage { Code = ErrorStatusCodes.ALREADY_EXISTS, Description = $"{subject} Already exists" };
+
+        public ServiceErrorMessage ChangesNotSaved(string source) => new ServiceErrorMessage { Code = ErrorStatusCodes.CHANGES_NOT_SAVED, Description = $"Changes were not saved in {source}" };
+
     }
 
     public enum ErrorStatusCodes
     {
+        DEFAULT,
         NOT_FOUND,
         INVALID_VALUE,
         ALREADY_EXISTS,

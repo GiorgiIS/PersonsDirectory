@@ -19,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TBCPersonsDirectory.Application\TBCPersonsDirectory.Application.csproj" />
+    <ProjectReference Include="..\TBCPersonsDirectory.Common.Api\TBCPersonsDirectory.Common.Api.csproj" />
     <ProjectReference Include="..\TBCPersonsDirectory.Repository.EF\TBCPersonsDirectory.Repository.EF.csproj" />
     <ProjectReference Include="..\TBCPersonsDirectory.Repository\TBCPersonsDirectory.Repository.csproj" />
     <ProjectReference Include="..\TBCPersonsDirectory.Services\TBCPersonsDirectory.Services.csproj" />

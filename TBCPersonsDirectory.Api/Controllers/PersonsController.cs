@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using TBCPersonsDirectory.Common;
+using TBCPersonsDirectory.Common.Api;
 using TBCPersonsDirectory.Services;
 using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
@@ -13,7 +14,7 @@ namespace TBCPersonsDirectory.Api.Controllers
 {
     [Route("api/persons/")]
     [ApiController]
-    public class PersonsController : Controller
+    public class PersonsController : BaseAPiController
     {
         private readonly IPersonsService  _personsService;
 
@@ -169,24 +170,6 @@ namespace TBCPersonsDirectory.Api.Controllers
             return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
-        private  IActionResult TransformServiceErrorToHttpStatusCode(ServiceErrorMessage serviceErrorMessage)
-        {
-            if (serviceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
-            {
-                return NotFound(serviceErrorMessage);
-            }
-
-            if (serviceErrorMessage.Code == ErrorStatusCodes.ALREADY_EXISTS)
-            {
-                return Conflict(serviceErrorMessage);
-            }
-
-            if (serviceErrorMessage.Code == ErrorStatusCodes.INVALID_VALUE)
-            {
-                return UnprocessableEntity(serviceErrorMessage);
-            }
-
-            return BadRequest(serviceErrorMessage);
-        }
+       
     }
 }
