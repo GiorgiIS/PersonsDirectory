@@ -41,6 +41,8 @@ namespace TBCPersonsDirectory.Api
             services.AddScoped<IPersonConnectionsRepository, PersonConnectionsRepository>();
             services.AddScoped<IReportService, ReportService>();
 
+            services.AddScoped<ICitysService, CitysService>();
+
             services.AddOpenApiDocument();
 
             services.AddControllers()
