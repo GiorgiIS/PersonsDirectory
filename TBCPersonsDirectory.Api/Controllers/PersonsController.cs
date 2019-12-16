@@ -32,7 +32,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok(serviceResponse.Result);
             }
 
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost]
@@ -45,7 +45,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpGet("{id}")]
@@ -58,12 +58,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok(serviceResponse.Result);
             }
 
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
-            {
-                return NotFound(serviceResponse.Result);
-            }
-
-            return BadRequest(serviceResponse.Result);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPut("{id}")]
@@ -76,12 +71,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok(serviceResponse.Result);
             }
 
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
-            {
-                return NotFound(serviceResponse.ServiceErrorMessage);
-            }
-
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPut("{id}/phones/{phone-number-id}")]
@@ -94,12 +84,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
-            {
-                return NotFound(serviceResponse.ServiceErrorMessage);
-            }
-
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}/phones/{phone-number-id}")]
@@ -112,12 +97,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return NoContent();
             }
 
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
-            {
-                return NotFound(serviceResponse.ServiceErrorMessage);
-            }
-
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost("{id}/phones")]
@@ -130,7 +110,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}")]
@@ -142,13 +122,7 @@ namespace TBCPersonsDirectory.Api.Controllers
             {
                 return NoContent();
             }
-
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
-            {
-                return NotFound(serviceResponse.ServiceErrorMessage);
-            }
-
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost("{id}/connected-persons/")]
@@ -161,22 +135,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
-            {
-                return NotFound(serviceResponse.ServiceErrorMessage);
-            }
-
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.ALREADY_EXISTS)
-            {
-                return Conflict(serviceResponse.ServiceErrorMessage);
-            }
-
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.INVALID_VALUE)
-            {
-                return UnprocessableEntity(serviceResponse.ServiceErrorMessage);
-            }
-
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPut("{id}/connected-persons/{connected-person-id}")]
@@ -192,22 +151,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
-            {
-                return NotFound(serviceResponse.ServiceErrorMessage);
-            }
-
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.ALREADY_EXISTS)
-            {
-                return Conflict(serviceResponse.ServiceErrorMessage);
-            }
-
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.INVALID_VALUE)
-            {
-                return UnprocessableEntity(serviceResponse.ServiceErrorMessage);
-            }
-
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}/connected-persons/{connected-person-id}")]
@@ -220,12 +164,27 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return NoContent();
             }
 
-            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+        }
+
+        private IActionResult TransformServiceErrorToHttpStatusCode(ServiceErrorMessage serviceErrorMessage)
+        {
+            if (serviceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
             {
-                return NotFound(serviceResponse.ServiceErrorMessage);
+                return NotFound(serviceErrorMessage);
             }
 
-            return BadRequest(serviceResponse.ServiceErrorMessage);
+            if (serviceErrorMessage.Code == ErrorStatusCodes.ALREADY_EXISTS)
+            {
+                return Conflict(serviceErrorMessage);
+            }
+
+            if (serviceErrorMessage.Code == ErrorStatusCodes.INVALID_VALUE)
+            {
+                return UnprocessableEntity(serviceErrorMessage);
+            }
+
+            return BadRequest(serviceErrorMessage);
         }
     }
 }

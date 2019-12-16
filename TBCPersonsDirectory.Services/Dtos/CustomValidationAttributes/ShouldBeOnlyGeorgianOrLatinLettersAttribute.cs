@@ -12,8 +12,8 @@ namespace TBCPersonsDirectory.Services.Dtos.CustomValidationAttributes
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var georgianLetters = Helper.GEORGIAN_LETTERS;
-            var englishLetters = Helper.ENGLISH_LETTERS;
+            var georgianLetters = LanguageLetters.GEORGIAN_LETTERS;
+            var englishLetters = LanguageLetters.ENGLISH_LETTERS;
 
             var stringedValue = value.ToString();
 

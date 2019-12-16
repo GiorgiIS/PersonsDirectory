@@ -14,8 +14,8 @@ namespace TBCPersonsDirectory.Services.Dtos.CustomValidationAttributes
         {
             var personCreateDto = value as PersonDtoInterface;
 
-            var eLetters = Helper.ENGLISH_LETTERS;
-            var gLetters = Helper.GEORGIAN_LETTERS;
+            var eLetters = LanguageLetters.ENGLISH_LETTERS;
+            var gLetters = LanguageLetters.GEORGIAN_LETTERS;
 
             var fn = personCreateDto.FirstName[0];
             var ln = personCreateDto.LastName[0];

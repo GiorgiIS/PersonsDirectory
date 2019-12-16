@@ -4,7 +4,7 @@ using System.Text;
 
 namespace TBCPersonsDirectory.Common
 {
-    public class Helper
+    public class LanguageLetters
     {
         public static char[] GEORGIAN_LETTERS = "აბგდევზთიკლმნოპჟრსტუფქღყშჩძწჭხჯჰ".ToCharArray();
         public static char[] ENGLISH_LETTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".ToCharArray();
