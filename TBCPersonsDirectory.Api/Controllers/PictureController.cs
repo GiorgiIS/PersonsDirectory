@@ -1,33 +1,59 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using TBCPersonsDirectory.Common;
+using TBCPersonsDirectory.Common.Api;
 using TBCPersonsDirectory.Services.Interfaces;
 
 namespace TBCPersonsDirectory.Api.Controllers
 {
-    [Route("api/images/")]
+    [Route("api/persons/{id}/pictures/")]
     [ApiController]
-    public class PictureController : ControllerBase
+    public class PictureController : BaseAPiController
     {
-        private readonly IPictureService _pictureService;
+        private readonly IPersonsService _personsService;
+        private readonly IWebHostEnvironment _env;
 
-        public PictureController(IPictureService pictureService)
+        public PictureController(IPersonsService personsService, IWebHostEnvironment env)
         {
-            _pictureService = pictureService;
+            _personsService = personsService;
+            _env = env;
+        }
+
+        [HttpPost]
+        [Produces("application/json")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400, Type = typeof(ServiceResponse))]
+        public async Task<IActionResult> Post(int id, IFormFile file)
+        {
+            var serviceResponse = await _personsService.UploadPicture(id, file);
+
+            if (serviceResponse.IsSuccess)
+            {
+                return Ok();
+            }
+
+            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [Produces("application/json")]
-        [HttpPost]
-        public async Task<IActionResult> Post(IFormFile file)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> Get(int id)
         {
-            await _pictureService.Upload(file);
-
-            return Ok();
+            try
+            {
+                var filePath = Directory.GetFiles(Path.Combine(_env.ContentRootPath, $"Files/Images/{id}/"), $"Person_{id}_Image*");
+                return Ok(filePath.Select(c => c.Replace("\\\\", "\\").Replace("//", "/")));
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
         }
     }
 }

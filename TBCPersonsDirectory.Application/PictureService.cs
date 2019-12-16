@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting.Internal;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,13 +14,15 @@ namespace TBCPersonsDirectory.Application
     {
         private readonly IPictureUploader _pictureUploader;
 
-        public PictureService(IPictureUploader pictureUploader)
+        private readonly IHostingEnvironment _env;
+
+        public PictureService(IPictureUploader pictureUploader, IHostingEnvironment env)
         {
             _pictureUploader = pictureUploader;
+            _env = env;
         }
 
-
-        public async Task Upload(IFormFile file)
+        public async Task Upload(IFormFile file, string subPath, string fileName)
         {
             if (file.Length > 2 * 1024 * 1024)
             {
@@ -32,12 +36,11 @@ namespace TBCPersonsDirectory.Application
                 bytes = ms.ToArray();
             }
             string extension;
-            string fileName;
 
             try
             {
                 extension = "." + file.FileName.Split('.')[^1];
-                fileName = Guid.NewGuid().ToString() + extension;
+                fileName += extension;
             }
             catch (Exception ex)
             {
@@ -45,7 +48,11 @@ namespace TBCPersonsDirectory.Application
                 throw;
             }
 
-            var result = await _pictureUploader.UploadAsync(bytes, fileName, "Files/Images");
+            string filePath = Path.Combine(_env.ContentRootPath, $"Files/Images/{subPath}");
+
+            System.IO.Directory.CreateDirectory(filePath);
+
+            var result = await _pictureUploader.UploadAsync(bytes, fileName, $"Files/Images/{subPath}");
         }
     }
 }

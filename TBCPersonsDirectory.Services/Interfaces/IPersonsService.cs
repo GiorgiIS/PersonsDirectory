@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,5 +28,6 @@ namespace TBCPersonsDirectory.Services.Interfaces
         Task<ServiceResponse> CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto);
         Task<ServiceResponse> UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId);
         Task<ServiceResponse> RemovePersonConnection(int sourcePersonId, int targetPersonId);
+        Task<ServiceResponse> UploadPicture(int id, IFormFile file);
     }
 }

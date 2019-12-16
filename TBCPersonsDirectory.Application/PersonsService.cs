@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,15 @@ namespace TBCPersonsDirectory.Application
     {
         private readonly IPersonsRepository _personsRepository;
         private readonly IPersonConnectionsRepository _personConnectionsRepository;
+        private readonly IPictureService _pictureService;
         private readonly IMapper _mapper;
 
-        public PersonsService(IPersonsRepository personsRepository, IPersonConnectionsRepository personConnectionsRepository, IMapper mapper)
+        public PersonsService(IPersonsRepository personsRepository, IPersonConnectionsRepository personConnectionsRepository,
+            IPictureService pictureService, IMapper mapper)
         {
             _personsRepository = personsRepository;
             _personConnectionsRepository = personConnectionsRepository;
+            _pictureService = pictureService;
             _mapper = mapper;
         }
 
@@ -385,6 +389,28 @@ namespace TBCPersonsDirectory.Application
             }
         }
 
+        public async Task<ServiceResponse> UploadPicture(int id, IFormFile file)
+        {
+            var person = _personsRepository.GetById(id);
+
+            if (file == null || file.Length < 1)
+            {
+                return new ServiceResponse()
+                    .Fail(new ServiceErrorMessage()
+                    .InvalidValue("file"));
+            }
+
+            if (person == null)
+            {
+                return new ServiceResponse()
+                    .Fail(new ServiceErrorMessage()
+                    .NotFound(id.ToString()));
+            }
+
+            await _pictureService.Upload(file, id.ToString(), $"Person_{id}_Image");
+            return new ServiceResponse().Ok();
+        }
+
         private PersonPhoneNumber GetPersonsPhone(int personId, int phoneId)
         {
             var person = _personsRepository.GetById(personId, nameof(Person.PhoneNumbers));
@@ -392,7 +418,6 @@ namespace TBCPersonsDirectory.Application
             var phone = person.PhoneNumbers.FirstOrDefault(c => c.Id == phoneId && c.DeletedAt == null);
             return phone;
         }
-
 
         public bool PersonConnectionTypeIsValid(int connectionTypeId)
         {

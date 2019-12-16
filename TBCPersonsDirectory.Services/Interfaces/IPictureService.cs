@@ -8,6 +8,6 @@ namespace TBCPersonsDirectory.Services.Interfaces
 {
     public interface IPictureService
     {
-        Task Upload(IFormFile file);
+        Task Upload(IFormFile file, string path, string fileName);
     }
 }
