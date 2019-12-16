@@ -32,11 +32,11 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok(serviceResponse.Result);
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost]
-        public IActionResult Create(PersonCreateDto personCreateDto)
+        public async Task<IActionResult> Create(PersonCreateDto personCreateDto)
         {
             var serviceResponse = _personsService.Create(personCreateDto);
 
@@ -45,7 +45,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpGet("{id}")]
@@ -58,7 +58,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok(serviceResponse.Result);
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPut("{id}")]
@@ -71,7 +71,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok(serviceResponse.Result);
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPut("{id}/phones/{phone-number-id}")]
@@ -81,10 +81,10 @@ namespace TBCPersonsDirectory.Api.Controllers
 
             if (serviceResponse.IsSuccess)
             {
-                return Ok();
+                return await Task.FromResult(Ok());
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}/phones/{phone-number-id}")]
@@ -97,7 +97,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return NoContent();
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost("{id}/phones")]
@@ -110,7 +110,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}")]
@@ -122,7 +122,7 @@ namespace TBCPersonsDirectory.Api.Controllers
             {
                 return NoContent();
             }
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost("{id}/connected-persons/")]
@@ -135,7 +135,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPut("{id}/connected-persons/{connected-person-id}")]
@@ -151,7 +151,7 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return Ok();
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}/connected-persons/{connected-person-id}")]
@@ -164,10 +164,10 @@ namespace TBCPersonsDirectory.Api.Controllers
                 return NoContent();
             }
 
-            return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
+            return await TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
         }
 
-        private IActionResult TransformServiceErrorToHttpStatusCode(ServiceErrorMessage serviceErrorMessage)
+        private async Task<IActionResult> TransformServiceErrorToHttpStatusCode(ServiceErrorMessage serviceErrorMessage)
         {
             if (serviceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
             {
