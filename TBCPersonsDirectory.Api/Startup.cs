@@ -5,17 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using TBCPersonsDirectory.Repository.EF;
-using TBCPersonsDirectory.Repository.Interfaces;
-using TBCPersonsDirectory.Repository.Implementation;
-using TBCPersonsDirectory.Services.Interfaces;
-using TBCPersonsDirectory.Application;
 using TBCPersonsDirectory.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
-using TBCPersonsDirectory.Common;
+using TBCPersonsDirectory.Api.Middlewares;
 
 namespace TBCPersonsDirectory.Api
 {
@@ -36,18 +32,7 @@ namespace TBCPersonsDirectory.Api
             var connectionString = Configuration["ConnectionStrings:Default"];
             services.AddDbContext<PersonsDbContext>(options => options.UseSqlServer(connectionString));
 
-            services.AddScoped<IPersonsRepository, PersonsRepository>();
-            services.AddScoped<IPersonsService, PersonsService>();
-
-            services.AddScoped<IPersonPhoneNumberRepository, PersonPhoneNumberRepository>();
-            
-            services.AddScoped<IPersonConnectionsRepository, PersonConnectionsRepository>();
-            services.AddScoped<IReportService, ReportService>();
-
-            services.AddScoped<ICitysService, CitysService>();
-            
-            services.AddScoped<IPictureUploader,PictureUploader>();
-            services.AddScoped<IPictureService, PictureService>();
+            services.AddServicesAndRepositories();
 
             services.AddOpenApiDocument();
 
