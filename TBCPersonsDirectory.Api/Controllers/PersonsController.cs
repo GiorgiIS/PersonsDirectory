@@ -43,7 +43,7 @@ namespace TBCPersonsDirectory.Api.Controllers
             if (serviceResponse.IsSuccess)
             {
                 // todo: Created status should be here
-                return Ok(); 
+                return CreatedAtAction(nameof(GetById), new { id = serviceResponse.Result.Id }, serviceResponse.Result); 
             }
 
             return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);

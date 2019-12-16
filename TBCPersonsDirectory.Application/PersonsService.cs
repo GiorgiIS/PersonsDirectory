@@ -30,7 +30,8 @@ namespace TBCPersonsDirectory.Application
 
         public async Task<ServiceResponse> AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto)
         {
-            if (!Exists(personId))
+            var person = _personsRepository.GetById(personId, nameof(Person.PhoneNumbers));
+            if (person == null)
             {
                 return new ServiceResponse().Fail(new ServiceErrorMessage
                 {
@@ -38,28 +39,53 @@ namespace TBCPersonsDirectory.Application
                     Description = "Person was not found"
                 });
             }
-
-            var person = _personsRepository.GetById(personId).Single();
             var phone = _mapper.Map<PersonPhoneNumber>(phoneNumberCreateDto);
             person.PhoneNumbers.Add(phone);
-            _personsRepository.SaveChanges();
 
-            return new ServiceResponse().Ok();
+            int saveResult = _personsRepository.SaveChanges();
+
+            if (saveResult > 0)
+            {
+                return new ServiceResponse().Ok();
+            }
+            else
+            {
+                return new ServiceResponse().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.AddPhoneNumber)}"
+                    }); ;
+            }
         }
 
-        public async Task<ServiceResponse> Create(PersonCreateDto personCreateDto)
+        public async Task<ServiceResponse<PersonReadDto>> Create(PersonCreateDto personCreateDto)
         {
             var person = _mapper.Map<Person>(personCreateDto);
 
             _personsRepository.Create(person);
-            _personsRepository.SaveChanges();
 
-            return new ServiceResponse().Ok();
+            int saveResult = _personsRepository.SaveChanges();
+
+            if (saveResult > 0)
+            {
+                var personReadDto = _mapper.Map<PersonReadDto>(person);
+                return new ServiceResponse<PersonReadDto>().Ok(personReadDto);
+            }
+            else
+            {
+                return new ServiceResponse<PersonReadDto>().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.Create)}"
+                    }); ;
+            }
         }
 
         public async Task<ServiceResponse> CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto)
         {
-            if (!Exists(sourcePersonId) || !Exists(personConnectionsCreateDto.TargetPersonId))
+            if (!_personsRepository.Exists(sourcePersonId) || !_personsRepository.Exists(personConnectionsCreateDto.TargetPersonId))
                 return new ServiceResponse().Fail(new ServiceErrorMessage
                 {
                     Code = ErrorStatusCodes.NOT_FOUND,
@@ -85,14 +111,27 @@ namespace TBCPersonsDirectory.Application
             connection.FirstPersonId = sourcePersonId;
 
             _personConnectionsRepository.Create(connection);
-            _personConnectionsRepository.SaveChanges();
+            int saveResult = _personConnectionsRepository.SaveChanges();
 
-            return new ServiceResponse().Ok();
+            if (saveResult > 0)
+            {
+                return new ServiceResponse().Ok();
+            }
+            else
+            {
+                return new ServiceResponse().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.CreateConnection)}"
+                    }); ;
+            }
+
         }
 
         public async Task<ServiceResponse> Delete(int id)
         {
-            if (!Exists(id))
+            if (!_personsRepository.Exists(id))
             {
                 return new ServiceResponse().Fail(new ServiceErrorMessage
                 {
@@ -102,14 +141,22 @@ namespace TBCPersonsDirectory.Application
             }
 
             _personsRepository.Delete(id);
-            _personsRepository.SaveChanges();
 
-            return new ServiceResponse().Ok();
-        }
+            int saveResult = _personsRepository.SaveChanges();
 
-        public bool Exists(int id)
-        {
-            return _personsRepository.Exists(id);
+            if (saveResult > 0)
+            {
+                return new ServiceResponse().Ok();
+            }
+            else
+            {
+                return new ServiceResponse().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.Delete)}"
+                    }); ;
+            }
         }
 
         public async Task<ServiceResponse<List<PersonReadDto>>> GetAll(PersonSearchModel model)
@@ -144,23 +191,23 @@ namespace TBCPersonsDirectory.Application
 
         public async Task<ServiceResponse<PersonReadDto>> GetById(int id)
         {
-            if (!Exists(id))
+            var person = _personsRepository.GetById(id,
+                nameof(Person.Gender),
+                nameof(Person.City),
+                nameof(Person.PhoneNumbers),
+                $"{nameof(Person.PhoneNumbers)}.{nameof(PersonPhoneNumber.PhoneNumberType)}");
+
+            if (person == null)
+            {
                 return new ServiceResponse<PersonReadDto>().Fail(new ServiceErrorMessage
                 {
                     Code = ErrorStatusCodes.NOT_FOUND,
                     Description = "Person was not found"
-                }); ;
-
-            var person = _personsRepository.GetById(id)
-                .Include(c => c.Gender)
-                .Include(c => c.City)
-                .Include(c => c.PhoneNumbers)
-                .Include("PhoneNumbers.PhoneNumberType")
-                .Single();
+                });
+            }
 
             person.PhoneNumbers = person.PhoneNumbers.Where(c => c.DeletedAt == null).ToList();
-
-            var connectedPersons = _personConnectionsRepository.GetByPersonId(id).Include(c => c.SecondPerson);
+            var connectedPersons = _personConnectionsRepository.GetConnections(id).Include(c => c.SecondPerson);
             var notRemoved = connectedPersons.Where(c => c.SecondPerson.DeletedAt == null && c.DeletedAt == null);
 
             var connectedPersonsReadDtos = _mapper.Map<List<PersonConnectionsReadDto>>(notRemoved);
@@ -171,25 +218,9 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse<PersonReadDto>().Ok(personDto);
         }
 
-        public bool PersonConnectionTypeIsValid(int connectionTypeId)
-        {
-            return _personConnectionsRepository.GetConnectionType(connectionTypeId) != null;
-        }
-
-        public bool PersonHasConnection(int sourcePersonId, int targetPersonId)
-        {
-            return _personConnectionsRepository.GetConnection(sourcePersonId, targetPersonId) != null;
-        }
-
-        public bool PersonHasPhone(int personId, int phoneId)
-        {
-            var phone = GetPersonsPhone(personId, phoneId);
-            return phone != null;
-        }
-
         public async Task<ServiceResponse> RemovePersonConnection(int sourcePersonId, int targetPersonId)
         {
-            if (!Exists(sourcePersonId) || !Exists(targetPersonId)
+            if (!_personsRepository.Exists(sourcePersonId) || !_personsRepository.Exists(targetPersonId)
             || !PersonHasConnection(sourcePersonId, targetPersonId))
             {
                 return new ServiceResponse().Fail(new ServiceErrorMessage
@@ -200,14 +231,27 @@ namespace TBCPersonsDirectory.Application
             }
 
             _personConnectionsRepository.RemovePersonsConnection(sourcePersonId, targetPersonId);
-            _personConnectionsRepository.SaveChanges();
+            int saveResult = _personConnectionsRepository.SaveChanges();
 
-            return new ServiceResponse().Ok();
+            if (saveResult > 0)
+            {
+                return new ServiceResponse().Ok();
+            }
+            else
+            {
+                return new ServiceResponse().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.RemovePersonConnection)}"
+                    }); ;
+            }
         }
 
         public async Task<ServiceResponse> RemovePersonsPhone(int personId, int phoneId)
         {
-            if (!Exists(personId))
+            var person = _personsRepository.GetById(personId, nameof(Person.PhoneNumbers));
+            if (person == null)
             {
                 return new ServiceResponse().Fail(new ServiceErrorMessage
                 {
@@ -215,8 +259,8 @@ namespace TBCPersonsDirectory.Application
                     Description = "Person was not found"
                 });
             }
-
-            if (!PersonHasPhone(personId, phoneId))
+            var phone = person.PhoneNumbers.FirstOrDefault(c => c.Id == phoneId && c.DeletedAt == null);
+            if (phone == null)
             {
                 return new ServiceResponse().Fail(new ServiceErrorMessage
                 {
@@ -225,18 +269,28 @@ namespace TBCPersonsDirectory.Application
                 });
             }
 
-            var phone = GetPersonsPhone(personId, phoneId);
-            phone.DeletedAt = DateTime.UtcNow;
-            phone.UpdatedAt = DateTime.UtcNow;
+            person.PhoneNumbers = person.PhoneNumbers.Where(x => x.Id != phoneId).ToList();
 
-            _personsRepository.SaveChanges();
+            int saveResult = _personsRepository.SaveChanges();
 
-            return new ServiceResponse().Ok();
+            if (saveResult > 0)
+            {
+                return new ServiceResponse().Ok();
+            }
+            else
+            {
+                return new ServiceResponse().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.RemovePersonConnection)}"
+                    }); ;
+            }
         }
 
         public async Task<ServiceResponse<int>> Update(int id, PersonUpdateDto personUpdateDto)
         {
-            var exists = Exists(id);
+            var exists = _personsRepository.Exists(id);
 
             if (!exists)
             {
@@ -252,16 +306,29 @@ namespace TBCPersonsDirectory.Application
             updated.Id = id;
 
             _personsRepository.Update(updated);
-            _personsRepository.SaveChanges();
+            int saveResult = _personsRepository.SaveChanges();
 
-            return new ServiceResponse<int>().Ok(id);
+            if (saveResult > 0)
+            {
+                return new ServiceResponse<int>().Ok(id);
+            }
+            else
+            {
+                return new ServiceResponse<int>().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.Update)}"
+                    }); ;
+            }
+
         }
 
         public async Task<ServiceResponse> UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId)
         {
-            if (!Exists(sourcePersonId) || !Exists(targetPersonId) || !PersonHasConnection(sourcePersonId, targetPersonId))
+            if (!_personsRepository.Exists(sourcePersonId) || !_personsRepository.Exists(targetPersonId) || !PersonHasConnection(sourcePersonId, targetPersonId))
             {
-                return new ServiceResponse<int>().Fail(
+                return new ServiceResponse().Fail(
                     new ServiceErrorMessage()
                     {
                         Code = ErrorStatusCodes.NOT_FOUND,
@@ -271,7 +338,7 @@ namespace TBCPersonsDirectory.Application
 
             if (!PersonConnectionTypeIsValid(connectionTypeId))
             {
-                return new ServiceResponse<int>().Fail(
+                return new ServiceResponse().Fail(
                     new ServiceErrorMessage()
                     {
                         Code = ErrorStatusCodes.INVALID_VALUE,
@@ -280,14 +347,27 @@ namespace TBCPersonsDirectory.Application
             }
 
             _personConnectionsRepository.UpdatePersonConnection(sourcePersonId, targetPersonId, connectionTypeId);
-            _personConnectionsRepository.SaveChanges();
 
-            return new ServiceResponse().Ok();
+            int saveResult = _personConnectionsRepository.SaveChanges();
+
+            if (saveResult > 0)
+            {
+                return new ServiceResponse().Ok();
+            }
+            else
+            {
+                return new ServiceResponse().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.UpdatePersonConnection)}"
+                    }); ;
+            }
         }
 
         public async Task<ServiceResponse> UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto)
         {
-            if (!Exists(personId))
+            if (!_personsRepository.Exists(personId))
             {
                 return new ServiceResponse().Fail(new ServiceErrorMessage
                 {
@@ -310,18 +390,46 @@ namespace TBCPersonsDirectory.Application
             phone.PhoneNumberTypeId = phoneNumberUpdateDto.PhoneNumberTypeId;
             phone.UpdatedAt = DateTime.UtcNow;
 
-            _personsRepository.SaveChanges();
+            int saveResult = _personsRepository.SaveChanges();
 
-            return new ServiceResponse().Ok();
+            if (saveResult > 0)
+            {
+                return new ServiceResponse().Ok();
+            }
+            else
+            {
+                return new ServiceResponse().Fail(
+                    new ServiceErrorMessage
+                    {
+                        Code = ErrorStatusCodes.CHANGES_NOT_SAVED,
+                        Description = $"Changes were not saved in {nameof(PersonsService.UpdatePersonPhone)}"
+                    }); ;
+            }
         }
 
         private PersonPhoneNumber GetPersonsPhone(int personId, int phoneId)
         {
-            var person = _personsRepository.GetById(personId)
-                .Include(c => c.PhoneNumbers).First();
+            var person = _personsRepository.GetById(personId, nameof(Person.PhoneNumbers));
 
             var phone = person.PhoneNumbers.FirstOrDefault(c => c.Id == phoneId && c.DeletedAt == null);
             return phone;
+        }
+
+
+        public bool PersonConnectionTypeIsValid(int connectionTypeId)
+        {
+            return _personConnectionsRepository.GetConnectionType(connectionTypeId) != null;
+        }
+
+        public bool PersonHasConnection(int sourcePersonId, int targetPersonId)
+        {
+            return _personConnectionsRepository.GetConnection(sourcePersonId, targetPersonId) != null;
+        }
+
+        public bool PersonHasPhone(int personId, int phoneId)
+        {
+            var phone = GetPersonsPhone(personId, phoneId);
+            return phone != null;
         }
     }
 }

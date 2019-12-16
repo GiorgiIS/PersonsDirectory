@@ -60,9 +60,16 @@ namespace TBCPersonsDirectory.Repository.Implementation
             return _context.SaveChanges();
         }
 
-        public IQueryable<T> GetById(K id)
+        public T GetById(K id, params string[] includes)
         {
-            return _context.Set<T>().Where(c => c.DeletedAt == null && c.Id.ToString() == id.ToString());
+            var set = _context.Set<T>().Where(c => c.DeletedAt == null && c.Id.Equals(id));
+
+            foreach (var include in includes)
+            {
+                set = set.Include(include);
+            }
+
+            return set.FirstOrDefault();
         }
 
         public bool Exists(K id)

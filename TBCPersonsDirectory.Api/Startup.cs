@@ -13,6 +13,9 @@ using TBCPersonsDirectory.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
+using TBCPersonsDirectory.Common;
 
 namespace TBCPersonsDirectory.Api
 {
@@ -42,6 +45,9 @@ namespace TBCPersonsDirectory.Api
             services.AddScoped<IReportService, ReportService>();
 
             services.AddScoped<ICitysService, CitysService>();
+            
+            services.AddScoped<IPictureUploader,PictureUploader>();
+            services.AddScoped<IPictureService, PictureService>();
 
             services.AddOpenApiDocument();
 
@@ -77,6 +83,11 @@ namespace TBCPersonsDirectory.Api
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles(new StaticFileOptions() {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "Files")),
+                RequestPath = "/Files"
+            });
 
             app.UseRouting();
 

@@ -10,7 +10,7 @@ namespace TBCPersonsDirectory.Repository.Interfaces
     {
         ConnectionType GetConnectionType(int connectionTypeId);
         PersonConnection GetConnection(int sourcePersonId, int targetPersonId);
-        IQueryable<PersonConnection> GetByPersonId(int sourcePersonId);
+        IQueryable<PersonConnection> GetConnections(int personId);
         void RemovePersonsConnection(int sourcePersonId, int targetPersonId);
         void UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId);
         List<ConnectionType> GetConnectionTypes();

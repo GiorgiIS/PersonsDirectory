@@ -14,7 +14,7 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         }
 
-        public IQueryable<PersonConnection> GetByPersonId(int sourcePersonId)
+        public IQueryable<PersonConnection> GetConnections(int sourcePersonId)
         {
             var persons = _context.PersonConnections.Where(c => c.DeletedAt == null && c.FirstPersonId == sourcePersonId);
             return persons;

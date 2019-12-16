@@ -61,6 +61,7 @@ namespace TBCPersonsDirectory.Common
         NOT_FOUND,
         INVALID_VALUE,
         ALREADY_EXISTS,
-        INTERNAL_SERVER_ERROR
+        INTERNAL_SERVER_ERROR,
+        CHANGES_NOT_SAVED
     }
 }

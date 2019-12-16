@@ -14,6 +14,6 @@ namespace TBCPersonsDirectory.Core
         public int? CityId { get; set; }
         public City City { get; set; }
         public string ImageUrl { get; set; }
-        public List<PersonPhoneNumber> PhoneNumbers { get; set; } = new List<PersonPhoneNumber>();
+        public ICollection<PersonPhoneNumber> PhoneNumbers { get; set; }
     }
 }

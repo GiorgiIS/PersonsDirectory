@@ -14,9 +14,8 @@ namespace TBCPersonsDirectory.Services.Interfaces
     public interface IPersonsService
     {
         Task<ServiceResponse<List<PersonReadDto>>> GetAll(PersonSearchModel model);
-        Task<ServiceResponse> Create(PersonCreateDto personCreateDto);
+        Task<ServiceResponse<PersonReadDto>> Create(PersonCreateDto personCreateDto);
         Task<ServiceResponse<PersonReadDto>> GetById(int id);
-        bool Exists(int id);
         Task<ServiceResponse<int>> Update(int id, PersonUpdateDto personUpdateDto);
         Task<ServiceResponse> Delete(int id);
         bool PersonHasPhone(int personId, int phoneId);
