@@ -22,8 +22,7 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         public IQueryable<T> GetAll()
         {
-            var set = _context.Set<T>().Where(c => c.DeletedAt == null);
-            return set;
+            return _context.Set<T>().Where(c => c.DeletedAt == null);
         }
 
         public IQueryable<T> Get(Expression<Func<T, bool>> expression)
@@ -33,13 +32,13 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         public void Create(T entity)
         {
-            var res = _context.Set<T>().Add(entity);
+            _context.Set<T>().Add(entity);
         }
 
         public void Update(T entity)
         {
             entity.UpdatedAt = DateTime.UtcNow;
-            var res = _context.Set<T>().Update(entity);
+           _context.Set<T>().Update(entity);
         }
 
         public void Delete(T entity)
@@ -49,10 +48,12 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         public void Delete(K id)
         {
-            var entity = Get(c => c.Id.ToString() == id.ToString()).First();
+            var entity = GetById(id);
+
             entity.UpdatedAt= DateTime.UtcNow;
             entity.DeletedAt = DateTime.UtcNow;
-            var res = _context.Set<T>().Update(entity);
+
+            _context.Set<T>().Update(entity);
         }
 
         public int SaveChanges()
@@ -74,7 +75,7 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         public bool Exists(K id)
         {
-            return _context.Set<T>().Count(c => c.Id.ToString() == id.ToString() && c.DeletedAt == null) == 1;
+            return _context.Set<T>().Count(c => c.Id.Equals(id) && c.DeletedAt == null) == 1;
         }
     }
 }
