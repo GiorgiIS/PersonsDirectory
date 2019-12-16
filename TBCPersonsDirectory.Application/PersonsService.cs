@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TBCPersonsDirectory.Common;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Repository.Interfaces;
@@ -27,7 +28,7 @@ namespace TBCPersonsDirectory.Application
             _mapper = mapper;
         }
 
-        public ServiceResponse AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto)
+        public async Task<ServiceResponse> AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto)
         {
             if (!Exists(personId))
             {
@@ -46,7 +47,7 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse().Ok();
         }
 
-        public ServiceResponse Create(PersonCreateDto personCreateDto)
+        public async Task<ServiceResponse> Create(PersonCreateDto personCreateDto)
         {
             var person = _mapper.Map<Person>(personCreateDto);
 
@@ -56,7 +57,7 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse().Ok();
         }
 
-        public ServiceResponse CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto)
+        public async Task<ServiceResponse> CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto)
         {
             if (!Exists(sourcePersonId) || !Exists(personConnectionsCreateDto.TargetPersonId))
                 return new ServiceResponse().Fail(new ServiceErrorMessage
@@ -89,7 +90,7 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse().Ok();
         }
 
-        public ServiceResponse Delete(int id)
+        public async Task<ServiceResponse> Delete(int id)
         {
             if (!Exists(id))
             {
@@ -111,7 +112,7 @@ namespace TBCPersonsDirectory.Application
             return _personsRepository.Exists(id);
         }
 
-        public ServiceResponse<List<PersonReadDto>> GetAll(PersonSearchModel model)
+        public async Task<ServiceResponse<List<PersonReadDto>>> GetAll(PersonSearchModel model)
         {
             var persons = _personsRepository.GetAll()
                 .Include(c => c.PhoneNumbers)
@@ -141,7 +142,7 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse<List<PersonReadDto>>().Ok(personDto);
         }
 
-        public ServiceResponse<PersonReadDto> GetById(int id)
+        public async Task<ServiceResponse<PersonReadDto>> GetById(int id)
         {
             if (!Exists(id))
                 return new ServiceResponse<PersonReadDto>().Fail(new ServiceErrorMessage
@@ -186,7 +187,7 @@ namespace TBCPersonsDirectory.Application
             return phone != null;
         }
 
-        public ServiceResponse RemovePersonConnection(int sourcePersonId, int targetPersonId)
+        public async Task<ServiceResponse> RemovePersonConnection(int sourcePersonId, int targetPersonId)
         {
             if (!Exists(sourcePersonId) || !Exists(targetPersonId)
             || !PersonHasConnection(sourcePersonId, targetPersonId))
@@ -204,7 +205,7 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse().Ok();
         }
 
-        public ServiceResponse RemovePersonsPhone(int personId, int phoneId)
+        public async Task<ServiceResponse> RemovePersonsPhone(int personId, int phoneId)
         {
             if (!Exists(personId))
             {
@@ -233,7 +234,7 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse().Ok();
         }
 
-        public ServiceResponse<int> Update(int id, PersonUpdateDto personUpdateDto)
+        public async Task<ServiceResponse<int>> Update(int id, PersonUpdateDto personUpdateDto)
         {
             var exists = Exists(id);
 
@@ -256,7 +257,7 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse<int>().Ok(id);
         }
 
-        public ServiceResponse UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId)
+        public async Task<ServiceResponse> UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId)
         {
             if (!Exists(sourcePersonId) || !Exists(targetPersonId) || !PersonHasConnection(sourcePersonId, targetPersonId))
             {
@@ -284,7 +285,7 @@ namespace TBCPersonsDirectory.Application
             return new ServiceResponse().Ok();
         }
 
-        public ServiceResponse UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto)
+        public async Task<ServiceResponse> UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto)
         {
             if (!Exists(personId))
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using TBCPersonsDirectory.Common;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
@@ -12,20 +13,20 @@ namespace TBCPersonsDirectory.Services.Interfaces
 {
     public interface IPersonsService
     {
-        ServiceResponse<List<PersonReadDto>> GetAll(PersonSearchModel model);
-        ServiceResponse Create(PersonCreateDto personCreateDto);
-        ServiceResponse<PersonReadDto> GetById(int id);
+        Task<ServiceResponse<List<PersonReadDto>>> GetAll(PersonSearchModel model);
+        Task<ServiceResponse> Create(PersonCreateDto personCreateDto);
+        Task<ServiceResponse<PersonReadDto>> GetById(int id);
         bool Exists(int id);
-        ServiceResponse<int> Update(int id, PersonUpdateDto personUpdateDto);
-        ServiceResponse Delete(int id);
+        Task<ServiceResponse<int>> Update(int id, PersonUpdateDto personUpdateDto);
+        Task<ServiceResponse> Delete(int id);
         bool PersonHasPhone(int personId, int phoneId);
-        ServiceResponse UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto);
-        ServiceResponse RemovePersonsPhone(int personId, int phoneId);
-        ServiceResponse AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto);
+        Task<ServiceResponse> UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto);
+        Task<ServiceResponse> RemovePersonsPhone(int personId, int phoneId);
+        Task<ServiceResponse> AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto);
         bool PersonConnectionTypeIsValid(int connectionTypeId);
         bool PersonHasConnection(int sourcePersonId, int targetPersonId);
-        ServiceResponse CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto);
-        ServiceResponse UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId);
-        ServiceResponse RemovePersonConnection(int sourcePersonId, int targetPersonId);
+        Task<ServiceResponse> CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto);
+        Task<ServiceResponse> UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId);
+        Task<ServiceResponse> RemovePersonConnection(int sourcePersonId, int targetPersonId);
     }
 }
