@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using TBCPersonsDirectory.Common;
 using TBCPersonsDirectory.Services;
 using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
@@ -24,111 +25,158 @@ namespace TBCPersonsDirectory.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery]PersonSearchModel model)
         {
-            return Ok(_personsService.GetAll(model));
+            var serviceResponse = _personsService.GetAll(model);
+
+            if (serviceResponse.IsSuccess)
+            {
+                return Ok(serviceResponse.Result);
+            }
+
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost]
         public IActionResult Create(PersonCreateDto personCreateDto)
         {
-            _personsService.Create(personCreateDto);
-            return Ok();
+            var serviceResponse = _personsService.Create(personCreateDto);
+
+            if (serviceResponse.IsSuccess)
+            {
+                return Ok();
+            }
+
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var person = _personsService.GetById(id);
+            var serviceResponse = _personsService.GetById(id);
 
-            if (person == null)
+            if (serviceResponse.IsSuccess)
             {
-                return NotFound(id);
+                return Ok(serviceResponse.Result);
             }
 
-            return Ok(person);
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
+            {
+                return NotFound(serviceResponse.Result);
+            }
+
+            return BadRequest(serviceResponse.Result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, PersonUpdateDto personUpdateDto)
         {
-            if (!_personsService.Exists(id))
+            var serviceResponse = _personsService.Update(id, personUpdateDto);
+
+            if (serviceResponse.IsSuccess)
             {
-                return NotFound(id);
+                return Ok(serviceResponse.Result);
             }
 
-            _personsService.Update(id, personUpdateDto);
-            
-            return Ok();
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
+            {
+                return NotFound(serviceResponse.ServiceErrorMessage);
+            }
+
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPut("{id}/phones/{phone-number-id}")]
         public async Task<IActionResult> UpdatePhoneNumber([FromRoute] int id, [FromRoute(Name = "phone-number-id")] int phoneNumberId, PhoneNumberUpdateDto phoneNumberUpdateDto)
         {
-            if (!_personsService.PersonHasPhone(id, phoneNumberId))
+            var serviceResponse = _personsService.UpdatePersonPhone(id, phoneNumberId, phoneNumberUpdateDto);
+
+            if (serviceResponse.IsSuccess)
             {
-                return NotFound();
+                return Ok();
             }
 
-            _personsService.UpdatePersonPhone(id, phoneNumberId, phoneNumberUpdateDto);
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
+            {
+                return NotFound(serviceResponse.ServiceErrorMessage);
+            }
 
-            return Ok();
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}/phones/{phone-number-id}")]
         public async Task<IActionResult> RemovePhoneNumber([FromRoute]int id, [FromRoute(Name = "phone-number-id")] int phoneNumberId)
         {
-            if (!_personsService.PersonHasPhone(id, phoneNumberId))
+            var serviceResponse = _personsService.RemovePersonsPhone(id, phoneNumberId);
+
+            if (serviceResponse.IsSuccess)
             {
-                return NotFound();
+                return NoContent();
             }
 
-            _personsService.RemovePersonsPhone(id, phoneNumberId);
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
+            {
+                return NotFound(serviceResponse.ServiceErrorMessage);
+            }
 
-            return NoContent();
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost("{id}/phones")]
         public async Task<IActionResult> AddPhonesForPerson([FromRoute]int id, PhoneNumberCreateDto phoneNumberCreateDto)
         {
-            if (!_personsService.Exists(id))
+            var serviceResponse = _personsService.AddPhoneNumber(id, phoneNumberCreateDto);
+
+            if (serviceResponse.IsSuccess)
             {
-                return NotFound(id);
+                return Ok();
             }
 
-            _personsService.AddPhoneNumber(id, phoneNumberCreateDto);
-
-            return Ok();
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var person = _personsService.GetById(id);
+            var serviceResponse = _personsService.Delete(id);
 
-            if (person == null)
+            if (serviceResponse.IsSuccess)
             {
-                return NotFound(id);
+                return NoContent();
             }
 
-            _personsService.Delete(id);
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
+            {
+                return NotFound(serviceResponse.ServiceErrorMessage);
+            }
 
-            return NoContent();
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPost("{id}/connected-persons/")]
         public async Task<IActionResult> AddConnectedPerson([FromRoute] int id, [FromBody]PersonConnectionsCreateDto relatedPersonCreateDto)
         {
-            if (!_personsService.Exists(id) || !_personsService.Exists(relatedPersonCreateDto.TargetPersonId))
-                return NotFound();
+            var serviceResponse = _personsService.CreateConnection(id, relatedPersonCreateDto);
 
-            if (!_personsService.PersonConnectionTypeIsValid(relatedPersonCreateDto.ConnectionTypeId))
-                return UnprocessableEntity();
+            if (serviceResponse.IsSuccess)
+            {
+                return Ok();
+            }
 
-            if (_personsService.PersonHasConnection(id, relatedPersonCreateDto.TargetPersonId))
-                return Conflict();
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
+            {
+                return NotFound(serviceResponse.ServiceErrorMessage);
+            }
 
-            _personsService.CreateConnection(id, relatedPersonCreateDto);
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.ALREADY_EXISTS)
+            {
+                return Conflict(serviceResponse.ServiceErrorMessage);
+            }
 
-            return Ok();
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.INVALID_VALUE)
+            {
+                return UnprocessableEntity(serviceResponse.ServiceErrorMessage);
+            }
+
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpPut("{id}/connected-persons/{connected-person-id}")]
@@ -137,35 +185,47 @@ namespace TBCPersonsDirectory.Api.Controllers
             [FromRoute(Name = "connected-person-id")] int targetPersonId,
             [FromBody] int relationShipId)
         {
+            var serviceResponse = _personsService.UpdatePersonConnection(id, targetPersonId, relationShipId);
 
-            if (!_personsService.Exists(id) || !_personsService.Exists(targetPersonId)
-               || !_personsService.PersonHasConnection(id, targetPersonId))
+            if (serviceResponse.IsSuccess)
             {
-                return NotFound();
+                return Ok();
             }
 
-            if (!_personsService.PersonConnectionTypeIsValid(relationShipId))
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
             {
-                return UnprocessableEntity();
+                return NotFound(serviceResponse.ServiceErrorMessage);
             }
 
-            _personsService.UpdatePersonConnection(id, targetPersonId, relationShipId);
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.ALREADY_EXISTS)
+            {
+                return Conflict(serviceResponse.ServiceErrorMessage);
+            }
 
-            return Ok();
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.INVALID_VALUE)
+            {
+                return UnprocessableEntity(serviceResponse.ServiceErrorMessage);
+            }
+
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
 
         [HttpDelete("{id}/connected-persons/{connected-person-id}")]
         public async Task<IActionResult> RemoveConnection([FromRoute]int id, [FromRoute(Name = "connected-person-id")] int targetPersonId)
         {
-            if (!_personsService.Exists(id) || !_personsService.Exists(targetPersonId)
-              || !_personsService.PersonHasConnection(id, targetPersonId))
+            var serviceResponse = _personsService.RemovePersonConnection(id, targetPersonId);
+
+            if (serviceResponse.IsSuccess)
             {
-                return NotFound();
+                return NoContent();
             }
 
-            _personsService.RemovePersonConnection(id, targetPersonId);
+            if (serviceResponse.ServiceErrorMessage.Code == ErrorStatusCodes.NOT_FOUND)
+            {
+                return NotFound(serviceResponse.ServiceErrorMessage);
+            }
 
-            return NoContent();
+            return BadRequest(serviceResponse.ServiceErrorMessage);
         }
     }
 }

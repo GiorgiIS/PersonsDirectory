@@ -12,20 +12,20 @@ namespace TBCPersonsDirectory.Services.Interfaces
 {
     public interface IPersonsService
     {
-        List<PersonReadDto> GetAll(PersonSearchModel model);
-        void Create(PersonCreateDto personCreateDto);
-        PersonReadDto GetById(int id);
+        ServiceResponse<List<PersonReadDto>> GetAll(PersonSearchModel model);
+        ServiceResponse Create(PersonCreateDto personCreateDto);
+        ServiceResponse<PersonReadDto> GetById(int id);
         bool Exists(int id);
-        void Update(int id, PersonUpdateDto personUpdateDto);
-        void Delete(int id);
+        ServiceResponse<int> Update(int id, PersonUpdateDto personUpdateDto);
+        ServiceResponse Delete(int id);
         bool PersonHasPhone(int personId, int phoneId);
-        void UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto);
-        void RemovePersonsPhone(int personId, int phoneId);
-        void AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto);
-        bool PersonConnectionTypeIsValid(int connectionTypeId); 
+        ServiceResponse UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto);
+        ServiceResponse RemovePersonsPhone(int personId, int phoneId);
+        ServiceResponse AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto);
+        bool PersonConnectionTypeIsValid(int connectionTypeId);
         bool PersonHasConnection(int sourcePersonId, int targetPersonId);
-        void CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto);
-        void UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId);
-        void RemovePersonConnection(int sourcePersonId, int targetPersonId);
+        ServiceResponse CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto);
+        ServiceResponse UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId);
+        ServiceResponse RemovePersonConnection(int sourcePersonId, int targetPersonId);
     }
 }

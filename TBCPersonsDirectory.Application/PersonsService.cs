@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using TBCPersonsDirectory.Common;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Repository.Interfaces;
 using TBCPersonsDirectory.Services.Dtos.PersonConnectionsDtos;
@@ -26,35 +27,83 @@ namespace TBCPersonsDirectory.Application
             _mapper = mapper;
         }
 
-        public void AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto)
+        public ServiceResponse AddPhoneNumber(int personId, PhoneNumberCreateDto phoneNumberCreateDto)
         {
+            if (!Exists(personId))
+            {
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "Person was not found"
+                });
+            }
+
             var person = _personsRepository.GetById(personId).Single();
             var phone = _mapper.Map<PersonPhoneNumber>(phoneNumberCreateDto);
             person.PhoneNumbers.Add(phone);
             _personsRepository.SaveChanges();
+
+            return new ServiceResponse().Ok();
         }
 
-        public void Create(PersonCreateDto personCreateDto)
+        public ServiceResponse Create(PersonCreateDto personCreateDto)
         {
             var person = _mapper.Map<Person>(personCreateDto);
 
             _personsRepository.Create(person);
             _personsRepository.SaveChanges();
+
+            return new ServiceResponse().Ok();
         }
 
-        public void CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto)
+        public ServiceResponse CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto)
         {
+            if (!Exists(sourcePersonId) || !Exists(personConnectionsCreateDto.TargetPersonId))
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "One or more person was not found"
+                });
+
+            if (!PersonConnectionTypeIsValid(personConnectionsCreateDto.ConnectionTypeId))
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.INVALID_VALUE,
+                    Description = "Connection Type Id was not found"
+                });
+
+
+            if (PersonHasConnection(sourcePersonId, personConnectionsCreateDto.TargetPersonId))
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.ALREADY_EXISTS,
+                    Description = "Connection between them already exists"
+                });
+
             var connection = _mapper.Map<PersonConnection>(personConnectionsCreateDto);
             connection.FirstPersonId = sourcePersonId;
 
             _personConnectionsRepository.Create(connection);
             _personConnectionsRepository.SaveChanges();
+
+            return new ServiceResponse().Ok();
         }
 
-        public void Delete(int id)
+        public ServiceResponse Delete(int id)
         {
+            if (!Exists(id))
+            {
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "Person was not found"
+                });
+            }
+
             _personsRepository.Delete(id);
             _personsRepository.SaveChanges();
+
+            return new ServiceResponse().Ok();
         }
 
         public bool Exists(int id)
@@ -62,7 +111,7 @@ namespace TBCPersonsDirectory.Application
             return _personsRepository.Exists(id);
         }
 
-        public List<PersonReadDto> GetAll(PersonSearchModel model)
+        public ServiceResponse<List<PersonReadDto>> GetAll(PersonSearchModel model)
         {
             var persons = _personsRepository.GetAll()
                 .Include(c => c.PhoneNumbers)
@@ -87,14 +136,19 @@ namespace TBCPersonsDirectory.Application
                 .Include(c => c.City)
                 .Include(c => c.Gender);
 
-            var personDtos = _mapper.Map<List<PersonReadDto>>(persons);
-            return personDtos;
+            var personDto = _mapper.Map<List<PersonReadDto>>(persons);
+
+            return new ServiceResponse<List<PersonReadDto>>().Ok(personDto);
         }
 
-        public PersonReadDto GetById(int id)
+        public ServiceResponse<PersonReadDto> GetById(int id)
         {
-            if (!_personsRepository.Exists(id))
-                return null;
+            if (!Exists(id))
+                return new ServiceResponse<PersonReadDto>().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "Person was not found"
+                }); ;
 
             var person = _personsRepository.GetById(id)
                 .Include(c => c.Gender)
@@ -106,14 +160,14 @@ namespace TBCPersonsDirectory.Application
             person.PhoneNumbers = person.PhoneNumbers.Where(c => c.DeletedAt == null).ToList();
 
             var connectedPersons = _personConnectionsRepository.GetByPersonId(id).Include(c => c.SecondPerson);
-            var notRemoved= connectedPersons.Where(c => c.SecondPerson.DeletedAt == null && c.DeletedAt == null);
+            var notRemoved = connectedPersons.Where(c => c.SecondPerson.DeletedAt == null && c.DeletedAt == null);
 
             var connectedPersonsReadDtos = _mapper.Map<List<PersonConnectionsReadDto>>(notRemoved);
 
             var personDto = _mapper.Map<PersonReadDto>(person);
             personDto.ConnectedPersons.AddRange(connectedPersonsReadDtos);
 
-            return personDto;
+            return new ServiceResponse<PersonReadDto>().Ok(personDto);
         }
 
         public bool PersonConnectionTypeIsValid(int connectionTypeId)
@@ -132,44 +186,132 @@ namespace TBCPersonsDirectory.Application
             return phone != null;
         }
 
-        public void RemovePersonConnection(int sourcePersonId, int targetPersonId)
+        public ServiceResponse RemovePersonConnection(int sourcePersonId, int targetPersonId)
         {
-           _personConnectionsRepository.RemovePersonsConnection(sourcePersonId, targetPersonId);
+            if (!Exists(sourcePersonId) || !Exists(targetPersonId)
+            || !PersonHasConnection(sourcePersonId, targetPersonId))
+            {
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "Persons or target connection was not found"
+                }); ;
+            }
+
+            _personConnectionsRepository.RemovePersonsConnection(sourcePersonId, targetPersonId);
             _personConnectionsRepository.SaveChanges();
+
+            return new ServiceResponse().Ok();
         }
 
-        public void RemovePersonsPhone(int personId, int phoneId)
+        public ServiceResponse RemovePersonsPhone(int personId, int phoneId)
         {
+            if (!Exists(personId))
+            {
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "Person was not found"
+                });
+            }
+
+            if (!PersonHasPhone(personId, phoneId))
+            {
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "Phone was not found"
+                });
+            }
+
             var phone = GetPersonsPhone(personId, phoneId);
             phone.DeletedAt = DateTime.UtcNow;
             phone.UpdatedAt = DateTime.UtcNow;
 
             _personsRepository.SaveChanges();
+
+            return new ServiceResponse().Ok();
         }
 
-        public void Update(int id, PersonUpdateDto personUpdateDto)
+        public ServiceResponse<int> Update(int id, PersonUpdateDto personUpdateDto)
         {
+            var exists = Exists(id);
+
+            if (!exists)
+            {
+                return new ServiceResponse<int>().Fail(
+                    new ServiceErrorMessage()
+                    {
+                        Code = ErrorStatusCodes.NOT_FOUND,
+                        Description = "Not found"
+                    });
+            }
+
             var updated = _mapper.Map<Person>(personUpdateDto);
             updated.Id = id;
 
             _personsRepository.Update(updated);
             _personsRepository.SaveChanges();
+
+            return new ServiceResponse<int>().Ok(id);
         }
 
-        public void UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId)
+        public ServiceResponse UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId)
         {
+            if (!Exists(sourcePersonId) || !Exists(targetPersonId) || !PersonHasConnection(sourcePersonId, targetPersonId))
+            {
+                return new ServiceResponse<int>().Fail(
+                    new ServiceErrorMessage()
+                    {
+                        Code = ErrorStatusCodes.NOT_FOUND,
+                        Description = "sourcePersonId, targetPersonId or connectionTypeId was not found"
+                    });
+            }
+
+            if (!PersonConnectionTypeIsValid(connectionTypeId))
+            {
+                return new ServiceResponse<int>().Fail(
+                    new ServiceErrorMessage()
+                    {
+                        Code = ErrorStatusCodes.INVALID_VALUE,
+                        Description = "relationShipId ahs invalid value"
+                    });
+            }
+
             _personConnectionsRepository.UpdatePersonConnection(sourcePersonId, targetPersonId, connectionTypeId);
             _personConnectionsRepository.SaveChanges();
+
+            return new ServiceResponse().Ok();
         }
 
-        public void UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto)
+        public ServiceResponse UpdatePersonPhone(int personId, int phoneId, PhoneNumberUpdateDto phoneNumberUpdateDto)
         {
+            if (!Exists(personId))
+            {
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "Person Id was not found"
+                });
+            }
+
+            if (!PersonHasPhone(personId, phoneId))
+            {
+                return new ServiceResponse().Fail(new ServiceErrorMessage
+                {
+                    Code = ErrorStatusCodes.NOT_FOUND,
+                    Description = "Persons phone with id was not found"
+                });
+            }
+
             var phone = GetPersonsPhone(personId, phoneId);
             phone.Number = phoneNumberUpdateDto.Number;
             phone.PhoneNumberTypeId = phoneNumberUpdateDto.PhoneNumberTypeId;
             phone.UpdatedAt = DateTime.UtcNow;
 
             _personsRepository.SaveChanges();
+
+            return new ServiceResponse().Ok();
         }
 
         private PersonPhoneNumber GetPersonsPhone(int personId, int phoneId)
