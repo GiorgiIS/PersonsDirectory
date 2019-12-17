@@ -99,7 +99,7 @@ namespace TBCPersonsDirectory.Application
             {
                 return new ServiceResponse()
                     .Fail(new ServiceErrorMessage()
-                    .InvalidValue($"SourcePersonId: {sourcePersonId} and TargetPersonId {targetPersonId}");
+                    .InvalidValue($"SourcePersonId: {sourcePersonId} and TargetPersonId {personConnectionsCreateDto.TargetPersonId}"));
             }
 
             if (!PersonConnectionTypeIsValid(personConnectionsCreateDto.ConnectionTypeId))
@@ -336,7 +336,7 @@ namespace TBCPersonsDirectory.Application
             {
                 return new ServiceResponse()
                     .Fail(new ServiceErrorMessage()
-                    .InvalidValue($"SourcePersonId: {sourcePersonId} and TargetPersonId {targetPersonId}");
+                    .InvalidValue($"SourcePersonId: {sourcePersonId} and TargetPersonId {targetPersonId}"));
             }
 
             if (!PersonHasConnection(sourcePersonId, targetPersonId))
