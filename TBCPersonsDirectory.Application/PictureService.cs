@@ -22,7 +22,7 @@ namespace TBCPersonsDirectory.Application
             _env = env;
         }
 
-        public async Task Upload(IFormFile file, string subPath, string fileName)
+        public async Task<string> Upload(IFormFile file, string subPath, string fileName)
         {
             if (file.Length > 2 * 1024 * 1024)
             {
@@ -53,6 +53,8 @@ namespace TBCPersonsDirectory.Application
             System.IO.Directory.CreateDirectory(filePath);
 
             var result = await _pictureUploader.UploadAsync(bytes, fileName, $"Files/Images/{subPath}");
+
+            return filePath;
         }
     }
 }

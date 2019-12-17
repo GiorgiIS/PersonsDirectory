@@ -389,16 +389,31 @@ namespace TBCPersonsDirectory.Application
             }
         }
 
-        public async Task<ServiceResponse> UploadPicture(int id, IFormFile file)
+        public async Task<ServiceResponse<string>> UploadPicture(int id, IFormFile file)
         {
             var person = _personsRepository.GetById(id);
 
             if (file == null || file.Length < 1)
             {
-                return new ServiceResponse()
+                return new ServiceResponse<string>()
                     .Fail(new ServiceErrorMessage()
                     .InvalidValue("file"));
             }
+
+            if (person == null)
+            {
+                return new ServiceResponse<string>()
+                    .Fail(new ServiceErrorMessage()
+                    .NotFound(id.ToString()));
+            }
+
+            var path = await _pictureService.Upload(file, id.ToString(), $"Person_{id}_Image");
+            return new ServiceResponse<string>().Ok(path);
+        }
+
+        public async Task<ServiceResponse> UpdatePersonImagePath(int id, string path)
+        {
+            var person = _personsRepository.GetById(id);
 
             if (person == null)
             {
@@ -407,8 +422,20 @@ namespace TBCPersonsDirectory.Application
                     .NotFound(id.ToString()));
             }
 
-            await _pictureService.Upload(file, id.ToString(), $"Person_{id}_Image");
-            return new ServiceResponse().Ok();
+            person.ImageUrl = path;
+
+            int saveResult = _personsRepository.SaveChanges();
+
+            if (saveResult > 0)
+            {
+                return new ServiceResponse().Ok();
+            }
+            else
+            {
+                return new ServiceResponse<int>()
+                    .Fail(new ServiceErrorMessage()
+                    .ChangesNotSaved(nameof(PersonsService.UpdatePersonImagePath)));
+            }
         }
 
         private PersonPhoneNumber GetPersonsPhone(int personId, int phoneId)

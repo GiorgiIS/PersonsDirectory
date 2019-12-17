@@ -28,6 +28,7 @@ namespace TBCPersonsDirectory.Services.Interfaces
         Task<ServiceResponse> CreateConnection(int sourcePersonId, PersonConnectionsCreateDto personConnectionsCreateDto);
         Task<ServiceResponse> UpdatePersonConnection(int sourcePersonId, int targetPersonId, int connectionTypeId);
         Task<ServiceResponse> RemovePersonConnection(int sourcePersonId, int targetPersonId);
-        Task<ServiceResponse> UploadPicture(int id, IFormFile file);
+        Task<ServiceResponse<string>> UploadPicture(int id, IFormFile file);
+        Task<ServiceResponse> UpdatePersonImagePath(int id, string path);
     }
 }

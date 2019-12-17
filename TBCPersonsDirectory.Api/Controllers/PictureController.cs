@@ -34,7 +34,14 @@ namespace TBCPersonsDirectory.Api.Controllers
 
             if (serviceResponse.IsSuccess)
             {
-                return Ok();
+                var updateImagePathResponse = await _personsService.UpdatePersonImagePath(id, serviceResponse.Result.ToString());
+
+                if (updateImagePathResponse.IsSuccess)
+                {
+                    return Ok();
+                }
+
+                return TransformServiceErrorToHttpStatusCode(updateImagePathResponse.ServiceErrorMessage);
             }
 
             return TransformServiceErrorToHttpStatusCode(serviceResponse.ServiceErrorMessage);
@@ -48,11 +55,11 @@ namespace TBCPersonsDirectory.Api.Controllers
             try
             {
                 var filePath = Directory.GetFiles(Path.Combine(_env.ContentRootPath, $"Files/Images/{id}/"), $"Person_{id}_Image*");
-                return Ok(filePath.Select(c => c.Replace("\\\\", "\\").Replace("//", "/")));
+                return Ok(filePath);
             }
             catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest();
             }
         }
     }
