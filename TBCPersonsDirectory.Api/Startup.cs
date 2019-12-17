@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
 using TBCPersonsDirectory.Api.Middlewares;
+using Serilog;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace TBCPersonsDirectory.Api
 {
@@ -62,10 +64,12 @@ namespace TBCPersonsDirectory.Api
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            //if (env.IsDevelopment())
+            //{
+            //    app.UseDeveloperExceptionPage();
+            //}
+
+            app.UseGlobalExceptionHandling();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles(new StaticFileOptions() {
