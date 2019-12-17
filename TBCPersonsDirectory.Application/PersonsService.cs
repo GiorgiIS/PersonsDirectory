@@ -94,6 +94,14 @@ namespace TBCPersonsDirectory.Application
                     .Fail(new ServiceErrorMessage()
                     .NotFound(personConnectionsCreateDto.TargetPersonId.ToString()));
 
+
+            if (sourcePersonId == personConnectionsCreateDto.TargetPersonId)
+            {
+                return new ServiceResponse()
+                    .Fail(new ServiceErrorMessage()
+                    .InvalidValue($"SourcePersonId: {sourcePersonId} and TargetPersonId {targetPersonId}");
+            }
+
             if (!PersonConnectionTypeIsValid(personConnectionsCreateDto.ConnectionTypeId))
                 return new ServiceResponse()
                     .Fail(new ServiceErrorMessage()
@@ -322,6 +330,13 @@ namespace TBCPersonsDirectory.Application
                 return new ServiceResponse()
                     .Fail(new ServiceErrorMessage()
                     .NotFound(targetPersonId.ToString()));
+            }
+
+            if (sourcePersonId == targetPersonId)
+            {
+                return new ServiceResponse()
+                    .Fail(new ServiceErrorMessage()
+                    .InvalidValue($"SourcePersonId: {sourcePersonId} and TargetPersonId {targetPersonId}");
             }
 
             if (!PersonHasConnection(sourcePersonId, targetPersonId))
