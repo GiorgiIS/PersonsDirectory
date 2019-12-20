@@ -36,7 +36,7 @@ namespace TBCPersonsDirectory.Api.Controllers
             throw new NotImplementedException();
         }
 
-        [HttpPut]
+        [HttpPut("{phone-number-id}")]
         public async Task<IActionResult> UpdatePhoneNumber([FromRoute]int id, PhoneNumberUpdateDto phoneNumberUpdateDto)
         {
             throw new NotImplementedException();

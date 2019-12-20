@@ -29,12 +29,19 @@ namespace TBCPersonsDirectory.Api.Controllers
             return Ok(_personsService.GetAll());
         }
 
+        [HttpPost]
+        public IActionResult Create(PersonCreateDto personCreateDto)
+        {
+            _personsService.Create(personCreateDto);
+            return Ok();
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var person = _personsService.GetById(id);
 
-            if (person == null)
+            if (person.IsNull())
             {
                 return NotFound(id);
             }
@@ -42,12 +49,32 @@ namespace TBCPersonsDirectory.Api.Controllers
             return Ok(_personsService.GetById(id));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Create(PersonCreateDto personCreateDto)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(int id, PersonUpdateDto personUpdateDto)
         {
-            _personsService.Create(personCreateDto);
+            if (!_personsService.Exists(id))
+            {
+                return NotFound(id);
+            }
+
+            _personsService.Update(id, personUpdateDto);
+            
             return Ok();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var person = _personsService.GetById(id);
+
+            if (person.IsNull())
+            {
+                return NotFound(id);
+            }
+
+            _personsService.Delete(id);
+
+            return NoContent();
+        }
     }
 }

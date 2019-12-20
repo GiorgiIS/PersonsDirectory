@@ -11,5 +11,8 @@ namespace TBCPersonsDirectory.Services.Interfaces
         List<PersonReadDto> GetAll();
         void Create(PersonCreateDto personCreateDto);
         PersonReadDto GetById(int id);
+        bool Exists(int id);
+        void Update(int id, PersonUpdateDto personUpdateDto);
+        void Delete(int id);
     }
 }

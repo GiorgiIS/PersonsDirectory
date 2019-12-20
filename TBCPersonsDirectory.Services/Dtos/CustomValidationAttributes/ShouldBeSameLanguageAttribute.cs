@@ -12,7 +12,7 @@ namespace TBCPersonsDirectory.Services.Dtos.CustomValidationAttributes
     {
         public override bool IsValid(object value)
         {
-            var personCreateDto = value as PersonCreateDto;
+            var personCreateDto = value as PersonDtoInterface;
 
             var eLetters = Helper.ENGLISH_LETTERS;
             var gLetters = Helper.GEORGIAN_LETTERS;

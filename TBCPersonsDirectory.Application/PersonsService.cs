@@ -30,6 +30,17 @@ namespace TBCPersonsDirectory.Application
             _personsRepository.SaveChanges();
         }
 
+        public void Delete(int id)
+        {
+            _personsRepository.Delete(id);
+            _personsRepository.SaveChanges();
+        }
+
+        public bool Exists(int id)
+        {
+            return _personsRepository.Exists(id);
+        }
+
         public List<PersonReadDto> GetAll()
         {
             var persons = _personsRepository.GetAll()
@@ -43,9 +54,7 @@ namespace TBCPersonsDirectory.Application
         public PersonReadDto GetById(int id)
         {
             if (!_personsRepository.Exists(id))
-            {
-                return null;
-            }
+                return PersonReadDto.Null();
 
             var person = _personsRepository.GetById(id)
                 .Include(c => c.Gender)
@@ -55,6 +64,15 @@ namespace TBCPersonsDirectory.Application
             var personDto = _mapper.Map<PersonReadDto>(person);
 
             return personDto;
+        }
+
+        public void Update(int id, PersonUpdateDto personUpdateDto)
+        {
+            var updated = _mapper.Map<Person>(personUpdateDto);
+            updated.Id = id;
+
+            _personsRepository.Update(updated);
+            _personsRepository.SaveChanges();
         }
     }
 }

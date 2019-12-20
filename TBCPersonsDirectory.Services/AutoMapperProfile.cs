@@ -13,7 +13,8 @@ namespace TBCPersonsDirectory.Services
         public AutoMapperProfile()
         {
             CreateMap<PersonCreateDto, Person>()
-                .ForMember(c => c.GenderId, d => d.MapFrom(d => d.GenderId));
+                .ForMember(c => c.GenderId, d => d.MapFrom(d => d.GenderId))
+                .ForMember(c => c.CityId, d => d.MapFrom(d => d.CityId));
 
             CreateMap<Person, PersonReadDto>()
                 .ForMember(c => c.City, d => d.MapFrom(x => x.City.Name))
@@ -22,6 +23,10 @@ namespace TBCPersonsDirectory.Services
             CreateMap<PersonPhoneNumber, PhoneNumberReadDto>()
                .ForMember(c => c.Type, d => d.MapFrom(x => x.PhoneNumberType.Name))
                .ForMember(c => c.Number, d => d.MapFrom(x => x.Number));
+
+            CreateMap<PersonUpdateDto, Person>()
+                .ForMember(c => c.GenderId, d => d.MapFrom(d => d.GenderId))
+                .ForMember(c => c.CityId, d => d.MapFrom(d => d.CityId));
         }
     }
 }
