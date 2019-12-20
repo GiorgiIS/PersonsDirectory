@@ -51,7 +51,7 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         public void Delete(K id)
         {
-            var entity = Get(c => c.Id.CompareTo(id) == 0).First();
+            var entity = Get(c => c.Id.ToString() == id.ToString()).First();
             entity.DeletedAt = DateTime.UtcNow;
             var res = _context.Set<T>().Update(entity);
         }
@@ -61,14 +61,14 @@ namespace TBCPersonsDirectory.Repository.Implementation
             return _context.SaveChanges();
         }
 
-        public T GetById(K id)
+        public IQueryable<T> GetById(K id)
         {
-            return _context.Set<T>().First(c => c.DeletedAt == null && c.Id.CompareTo(id) == 0);
+            return _context.Set<T>().Where(c => c.DeletedAt == null && c.Id.ToString() == id.ToString());
         }
 
         public bool Exists(K id)
         {
-            return _context.Set<T>().Count(c => c.Id.CompareTo(id) == 0 && c.DeletedAt == null) == 1;
+            return _context.Set<T>().Count(c => c.Id.ToString() == id.ToString() && c.DeletedAt == null) == 1;
         }
     }
 }

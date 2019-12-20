@@ -34,12 +34,27 @@ namespace TBCPersonsDirectory.Application
         {
             var persons = _personsRepository.GetAll()
                 .Include(c => c.City)
-                .Include(c => c.PhoneNumbers)
-                .Include(c => c.Gender)
-                .Include("PhoneNumbers.PhoneNumberType");
+                .Include(c => c.Gender);
 
             var personDtos = _mapper.Map<List<PersonReadDto>>(persons);
             return personDtos;
+        }
+
+        public PersonReadDto GetById(int id)
+        {
+            if (!_personsRepository.Exists(id))
+            {
+                return null;
+            }
+
+            var person = _personsRepository.GetById(id)
+                .Include(c => c.Gender)
+                .Include(c => c.City)
+                .Single();
+
+            var personDto = _mapper.Map<PersonReadDto>(person);
+
+            return personDto;
         }
     }
 }

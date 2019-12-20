@@ -10,7 +10,7 @@ using TBCPersonsDirectory.Services.Interfaces;
 
 namespace TBCPersonsDirectory.Api.Controllers
 {
-    [Route("api/persons")]
+    [Route("api/persons/")]
     [ApiController]
     public class PersonsController : Controller
     {
@@ -27,6 +27,19 @@ namespace TBCPersonsDirectory.Api.Controllers
         public async Task<IActionResult> Get()
         {
             return Ok(_personsService.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var person = _personsService.GetById(id);
+
+            if (person == null)
+            {
+                return NotFound(id);
+            }
+
+            return Ok(_personsService.GetById(id));
         }
 
         [HttpPost]

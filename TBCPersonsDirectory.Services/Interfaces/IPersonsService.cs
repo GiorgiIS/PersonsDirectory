@@ -10,5 +10,6 @@ namespace TBCPersonsDirectory.Services.Interfaces
     {
         List<PersonReadDto> GetAll();
         void Create(PersonCreateDto personCreateDto);
+        PersonReadDto GetById(int id);
     }
 }

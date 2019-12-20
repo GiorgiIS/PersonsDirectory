@@ -12,7 +12,7 @@ namespace TBCPersonsDirectory.Repository.Interfaces
         where K : IComparable
     {
         IQueryable<T> GetAll();
-        T GetById(K id);
+        IQueryable<T> GetById(K id);
         bool Exists(K id);
         IQueryable<T> Get(Expression<Func<T, bool>> expression);
         void Create(T entity);
