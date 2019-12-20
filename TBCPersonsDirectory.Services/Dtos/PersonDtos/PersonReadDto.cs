@@ -12,6 +12,6 @@ namespace TBCPersonsDirectory.Services.Dtos.PersonDtos
         public DateTime? BirthDate { get; set; }
         public string City { get; set; }
         public string ImageUrl { get; set; }
-        public List<PhoneNumberDto> PhoneNumbers { get; set; } = new List<PhoneNumberDto>();
+        public string Gender { get; set; }
     }
 }

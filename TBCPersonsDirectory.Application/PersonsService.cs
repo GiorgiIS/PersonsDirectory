@@ -35,6 +35,7 @@ namespace TBCPersonsDirectory.Application
             var persons = _personsRepository.GetAll()
                 .Include(c => c.City)
                 .Include(c => c.PhoneNumbers)
+                .Include(c => c.Gender)
                 .Include("PhoneNumbers.PhoneNumberType");
 
             var personDtos = _mapper.Map<List<PersonReadDto>>(persons);

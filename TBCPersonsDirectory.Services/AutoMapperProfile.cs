@@ -11,10 +11,12 @@ namespace TBCPersonsDirectory.Services
     {
         public AutoMapperProfile()
         {
-            CreateMap<PersonCreateDto, Person>();
+            CreateMap<PersonCreateDto, Person>()
+                .ForMember(c => c.GenderId, d => d.MapFrom(d => d.GenderId));
 
             CreateMap<Person, PersonReadDto>()
-                .ForMember(c => c.City, d => d.MapFrom(x => x.City.Name));
+                .ForMember(c => c.City, d => d.MapFrom(x => x.City.Name))
+                .ForMember(c => c.Gender, d => d.MapFrom(d => d.Gender.Name));
 
             CreateMap<PersonPhoneNumber, PhoneNumberDto>()
                .ForMember(c => c.Type, d => d.MapFrom(x => x.PhoneNumberType.Name))

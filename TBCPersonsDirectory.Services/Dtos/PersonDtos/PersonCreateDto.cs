@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
-using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Services.Dtos.CustomValidationAttributes;
 
 namespace TBCPersonsDirectory.Services.Dtos.PersonDtos
@@ -30,8 +27,7 @@ namespace TBCPersonsDirectory.Services.Dtos.PersonDtos
         [AtLeast18YearsOld]
         public DateTime? BirthDate { get; set; }
 
-        [Range(0, 1)]
-        public int? Gender { get; set; }
+        public int? GenderId { get; set; }
 
         [Required]
         public string ImageUrl { get; set; }
