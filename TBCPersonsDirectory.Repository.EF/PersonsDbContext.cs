@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TBCPersonsDirectory.Core;
-using TBCPersonsDirectory.Repository.EF.Migrations;
 
 namespace TBCPersonsDirectory.Repository.EF
 {
@@ -73,7 +72,7 @@ namespace TBCPersonsDirectory.Repository.EF
                      LastName = "Maldini",
                      ImageUrl = "NO_IMAGE",
                      GenderId = 1,
-                     PrivateNumber = "06345678911",
+                     PrivateNumber = "06345678911"
                  }
                 });
 

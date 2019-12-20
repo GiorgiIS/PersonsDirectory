@@ -8,14 +8,15 @@ namespace TBCPersonsDirectory.Core
     public class PersonPhoneNumber : BaseEntity<int>
     {
         public PersonPhoneNumber() { }
-        public PersonPhoneNumber(int id, int personId, string number, int phoneNumberTypeId)
+        public PersonPhoneNumber(int id, int? personId, string number, int phoneNumberTypeId)
         {
             Number = number;
             PhoneNumberTypeId = phoneNumberTypeId;
-            PersonId = PersonId;
+            PersonId = personId;
             Id = id;
         }
 
+        [Required]
         public int? PersonId { get; set; }
         public Person Person { get; set; }
         

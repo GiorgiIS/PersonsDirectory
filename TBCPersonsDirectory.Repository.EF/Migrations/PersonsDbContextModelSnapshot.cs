@@ -169,28 +169,28 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                         new
                         {
                             Id = 1,
-                            BirthDate = new DateTime(1994, 12, 14, 16, 53, 5, 292, DateTimeKind.Local).AddTicks(9711),
+                            BirthDate = new DateTime(1994, 12, 20, 21, 17, 6, 126, DateTimeKind.Local).AddTicks(4443),
                             CityId = 1,
-                            CreatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 292, DateTimeKind.Utc).AddTicks(7022),
+                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 126, DateTimeKind.Utc).AddTicks(541),
                             FirstName = "Kaka",
                             GenderId = 1,
                             ImageUrl = "NO_IMAGE",
                             LastName = "Kuku",
                             PrivateNumber = "12345678911",
-                            UpdatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 292, DateTimeKind.Utc).AddTicks(7722)
+                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 126, DateTimeKind.Utc).AddTicks(2318)
                         },
                         new
                         {
                             Id = 2,
-                            BirthDate = new DateTime(1994, 12, 14, 16, 53, 5, 294, DateTimeKind.Local).AddTicks(1050),
+                            BirthDate = new DateTime(1994, 12, 20, 21, 17, 6, 127, DateTimeKind.Local).AddTicks(7653),
                             CityId = 1,
-                            CreatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(1014),
+                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 127, DateTimeKind.Utc).AddTicks(7617),
                             FirstName = "Paolo",
                             GenderId = 1,
                             ImageUrl = "NO_IMAGE",
                             LastName = "Maldini",
                             PrivateNumber = "06345678911",
-                            UpdatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(1028)
+                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 127, DateTimeKind.Utc).AddTicks(7631)
                         });
                 });
 
@@ -234,10 +234,10 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                         {
                             Id = 1,
                             ConnectionTypeId = 1,
-                            CreatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(5792),
+                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(3515),
                             FirstPersonId = 1,
                             SecondPersonId = 2,
-                            UpdatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(5796)
+                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(3520)
                         });
                 });
 
@@ -255,12 +255,16 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Number")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<int?>("PersonId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int?>("PhoneNumberTypeId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -278,34 +282,38 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
                         new
                         {
                             Id = 1,
-                            CreatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(2504),
+                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(5),
                             Number = "111111111",
+                            PersonId = 1,
                             PhoneNumberTypeId = 1,
-                            UpdatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(2510)
+                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(9)
                         },
                         new
                         {
                             Id = 2,
-                            CreatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(4382),
+                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1964),
                             Number = "222222222",
+                            PersonId = 1,
                             PhoneNumberTypeId = 2,
-                            UpdatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(4386)
+                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1968)
                         },
                         new
                         {
                             Id = 3,
-                            CreatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(4416),
+                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1994),
                             Number = "333333333",
+                            PersonId = 2,
                             PhoneNumberTypeId = 2,
-                            UpdatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(4417)
+                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1995)
                         },
                         new
                         {
                             Id = 4,
-                            CreatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(4419),
+                            CreatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1997),
                             Number = "55555555",
+                            PersonId = 2,
                             PhoneNumberTypeId = 1,
-                            UpdatedAt = new DateTime(2019, 12, 14, 12, 53, 5, 294, DateTimeKind.Utc).AddTicks(4420)
+                            UpdatedAt = new DateTime(2019, 12, 20, 17, 17, 6, 128, DateTimeKind.Utc).AddTicks(1998)
                         });
                 });
 
@@ -370,12 +378,16 @@ namespace TBCPersonsDirectory.Repository.EF.Migrations
             modelBuilder.Entity("TBCPersonsDirectory.Core.PersonPhoneNumber", b =>
                 {
                     b.HasOne("TBCPersonsDirectory.Core.Person", "Person")
-                        .WithMany("PhoneNumber")
-                        .HasForeignKey("PersonId");
+                        .WithMany("PhoneNumbers")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("TBCPersonsDirectory.Core.PhoneNumberType", "PhoneNumberType")
                         .WithMany()
-                        .HasForeignKey("PhoneNumberTypeId");
+                        .HasForeignKey("PhoneNumberTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

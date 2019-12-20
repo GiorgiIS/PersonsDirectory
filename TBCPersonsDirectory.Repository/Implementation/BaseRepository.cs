@@ -22,12 +22,13 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         public IQueryable<T> GetAll()
         {
-            return _context.Set<T>().Where(c => c.DeletedAt == null);
+            var set = _context.Set<T>().Where(c => c.DeletedAt == null);
+            return set;
         }
 
         public IQueryable<T> Get(Expression<Func<T, bool>> expression)
         {
-            return _context.Set<T>().Where(c => c.DeletedAt == null).Where(expression).AsNoTracking();
+            return _context.Set<T>().Where(c => c.DeletedAt == null).Where(expression);
         }
 
         public void Create(T entity)

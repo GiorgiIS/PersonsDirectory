@@ -32,7 +32,12 @@ namespace TBCPersonsDirectory.Application
 
         public List<PersonReadDto> GetAll()
         {
-            var personDtos = _mapper.Map<List<PersonReadDto>>(_personsRepository.GetAll().Include(c => c.City));
+            var persons = _personsRepository.GetAll()
+                .Include(c => c.City)
+                .Include(c => c.PhoneNumbers)
+                .Include("PhoneNumbers.PhoneNumberType");
+
+            var personDtos = _mapper.Map<List<PersonReadDto>>(persons);
             return personDtos;
         }
     }
