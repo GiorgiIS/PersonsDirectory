@@ -4,9 +4,9 @@ using TBCPersonsDirectory.Repository.Interfaces;
 
 namespace TBCPersonsDirectory.Repository.Implementation
 {
-    public class PersonsRepository : BaseRepository<Person, int>, IPersonsRepository
+    public class PersonPhoneNumberRepository : BaseRepository<PersonPhoneNumber, int>, IPersonPhoneNumberRepository
     {
-        public PersonsRepository(PersonsDbContext context) : base(context)
+        public PersonPhoneNumberRepository(PersonsDbContext context) : base(context)
         {
         }
     }

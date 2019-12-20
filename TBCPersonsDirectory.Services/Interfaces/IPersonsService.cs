@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
+using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 
 namespace TBCPersonsDirectory.Services.Interfaces
 {

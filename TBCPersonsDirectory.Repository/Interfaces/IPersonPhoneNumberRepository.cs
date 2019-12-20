@@ -5,7 +5,7 @@ using TBCPersonsDirectory.Core;
 
 namespace TBCPersonsDirectory.Repository.Interfaces
 {
-    public interface IPersonPhoneNumberRepository : IBaseRepository<PersonPhoneNumber, int>
+    public interface IPersonsRepository : IBaseRepository<Person, int>
     {
     }
 }

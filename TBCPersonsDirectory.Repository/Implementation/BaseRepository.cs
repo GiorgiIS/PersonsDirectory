@@ -44,14 +44,13 @@ namespace TBCPersonsDirectory.Repository.Implementation
 
         public void Delete(T entity)
         {
-            entity.UpdatedAt = DateTime.UtcNow;
-            entity.DeletedAt = DateTime.UtcNow;
-            var res = _context.Set<T>().Update(entity);
+            Delete(entity.Id);
         }
 
         public void Delete(K id)
         {
             var entity = Get(c => c.Id.ToString() == id.ToString()).First();
+            entity.UpdatedAt= DateTime.UtcNow;
             entity.DeletedAt = DateTime.UtcNow;
             var res = _context.Set<T>().Update(entity);
         }

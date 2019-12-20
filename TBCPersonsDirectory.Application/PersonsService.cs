@@ -7,6 +7,7 @@ using System.Text;
 using TBCPersonsDirectory.Core;
 using TBCPersonsDirectory.Repository.Interfaces;
 using TBCPersonsDirectory.Services.Dtos.PersonDtos;
+using TBCPersonsDirectory.Services.Dtos.PhoneNumberDtos;
 using TBCPersonsDirectory.Services.Interfaces;
 
 namespace TBCPersonsDirectory.Application
@@ -70,7 +71,7 @@ namespace TBCPersonsDirectory.Application
         {
             var updated = _mapper.Map<Person>(personUpdateDto);
             updated.Id = id;
-
+           
             _personsRepository.Update(updated);
             _personsRepository.SaveChanges();
         }
