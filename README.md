@@ -1,2 +1,2 @@
-# TBCPersonsDirectory
+# PersonsDirectory
 Task project
